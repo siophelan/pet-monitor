@@ -7,7 +7,7 @@ camera = PiCamera()
 
 # function to capture still image and save to file with sequential numbering
 def takephoto():
-    image = 1               # set file count
+    image = 1               # set file count to 1
     camera.start_preview()  # start preview mode to adjust to light settings
     sleep(3)                # wait 3 seconds
     camera.capture(
@@ -16,9 +16,9 @@ def takephoto():
     camera.stop_preview()   # end preview mode
 
 
-# capture 10-second video and save to file with sequential numbering
+# function to capture 10-second video and save to file with sequential numbering
 def takevideo():
-    video = 1               # set file count
+    video = 1               # set file count to 1
     camera.start_preview()  # start preview mode to adjust to light settings
     camera.start_recording(
         '/home/sio/testvideos/Catcam/test%03d.h264' % video)  # begin video capture; save to file path
