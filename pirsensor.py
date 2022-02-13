@@ -21,20 +21,21 @@ GPIO.setmode(GPIO.BOARD)
 # GPIO.output(pin_number, False)
 
 try:
-    # WHILE motion detected (True):
+    # motion detected 
+    while True:
+        # set variable for input
         # IF sensor signal received:
-            print('Motion detected!')
+            print("Motion detected!")
         # ELSE:
-            # DO SOMETHING ELSE
-            print('No motion detected...')
+            print("No motion detected...")
 
 except KeyboardInterrupt:
     # if program interrupted by CTRL+C key press
-    # DO SOMETHING BEFORE PROGRAM EXITS
+    print("Programme execution manually cancelled!")
 
 except:
     # for all other errors
-    print('Error or exception occurred!')
+    print("Error or exception occurred!")
 
 finally:
     # clean up any GPIO ports used on program exit
