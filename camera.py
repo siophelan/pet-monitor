@@ -4,6 +4,8 @@ from picamera import PiCamera
 from time import sleep
 
 camera = PiCamera()
+# optional: set camera resolution and/or framerate
+# optional: configure other camera settings
 
 # function to capture still image and save to file with sequential numbering
 def takephoto():
@@ -29,9 +31,8 @@ def takevideo():
 
 
 # test functionality
-camera.takephoto()
-camera.takephoto()
-camera.takephoto()
+takephoto()
+takephoto()
 
-camera.takevideo()
-camera.takevideo()
+takevideo()
+takevideo()
