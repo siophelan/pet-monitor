@@ -7,40 +7,49 @@ camera = PiCamera()
 # optional: set camera.resolution and/or camera.framerate
 # optional: configure other camera settings, e.g. camera.awb_mode; camera.exposure_mode; camera.ISO
 
-# function to capture still image and save to file with sequential numbering
-def takephoto():
-    image = 1               # set file count to 1
-    sleep(2)                # wait 2 seconds
-    camera.capture(
-        '/home/sio/Catcam/testimages/test%03d.jpg' % image)  # take photo; save to file path
-    image += 1              # increment file count
-
-
-# function to capture 10-second video and save to file with sequential numbering
-def takevideo():
-    video = 1               # set file count to 1
-    camera.start_recording(
-        '/home/sio/Catcam/testvideos/test%03d.h264' % video)  # begin video capture; save to file path
-    sleep(5)               # wait 5 seconds
-    camera.stop_recording() # stop video capture
-    video += 1              # increment file count
-
-
-# test functionality
+# test basic functionality
 try:
-    camera.start_preview()  # start preview mode to adjust to light settings
-    takephoto()
-    sleep(3)
-    takevideo()
+    count = 1
+    camera.start_preview()
+    sleep(5)                # delay to adjust to lighting
+    camera.capture(
+        '/home/sio/Catcam/testimages/test%03d.jpg' % count)
+    count += 1
+    sleep(1)
+    camera.capture(
+        '/home/sio/Catcam/testimages/test%03d.jpg' % count)
+    count += 1
+    sleep(1)
+    camera.capture(
+        '/home/sio/Catcam/testimages/test%03d.jpg' % count)
 
 except KeyboardInterrupt:
-    camera.stop_preview()   # end preview mode
+    camera.stop_preview()
+    print("Test cancelled!")
     camera.close()
 
 except:
-    camera.stop_preview()   # end preview mode
+    camera.stop_preview()
+    print("Error or exception occurred!")
     camera.close()
 
 finally:
-    camera.stop_preview()   # end preview mode
+    camera.stop_preview()
     camera.close()
+
+# FUNCTIONS STILL NEED WORK
+
+# function to capture still image and save to file with sequential numbering
+def take_photo():
+    sleep(2)               
+    camera.capture(
+        '/home/sio/Catcam/testimages/test%03d.jpg' % count)
+    count += 1
+
+# function to capture 10-second video and save to file with sequential numbering
+def take_video():
+    camera.start_recording(
+        '/home/sio/Catcam/testvideos/test%03d.h264' % count)
+    sleep(10)              
+    camera.stop_recording()
+    count += 1
