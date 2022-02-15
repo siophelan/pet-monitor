@@ -23,7 +23,7 @@ def main():
     take_photo()
     take_photo()
     record_video()
-    camera.stop_preview()
+    camera.stop_preview()   
 
 # function to capture still image with timestamped filename
 def take_photo():
@@ -33,9 +33,9 @@ def take_photo():
 
 # function to capture 5-second video with timestamped filename
 def record_video():
-    camera.start_recording(vidfile)  # begin video capture and save to file path
-    sleep(10)               # wait 5 seconds
-    camera.stop_recording() # stop video capture
+    camera.start_recording(vidfile) # begin video capture and save to file path
+    sleep(5)                        # wait 5 seconds
+    camera.stop_recording()         # stop video capture
     print("Video recorded!")
 
 if __name__ == '__main__':
