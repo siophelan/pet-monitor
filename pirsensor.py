@@ -1,42 +1,24 @@
 # A script to control the PIR sensor
 
-import RPi.GPIO as GPIO
+from gpiozero import MotionSensor
 
-# suppress warnings from the library
-GPIO.setwarnings (False) 
-
-# configure the pins
-GPIO.setmode(GPIO.BOARD)
-
-# configure pins 4 (power), 6 (ground) and 11 (output) using following syntax:
-# GPIO.setup(pin_number, GPIO.IN/ GPIO.OUT)
-
-# set a pullup or pulldown resistor for input pins using following syntax:
-# GPIO.setup(pin_number, GPIO,IN, pull_up_donw=GPIO.PUD_UP)
-
-# turn pins on using following syntax:
-# GPIO.output(pin_number, True)
-
-# or off using following syntax:
-# GPIO.output(pin_number, False)
+pir = MotionSensor(17)
 
 try:
-    # motion detected 
+    print("Testing PIR sensor (enter CTRL+C to end)")
+
+    # wait for signal from PIR sensor
     while True:
-        # set variable for input
-        # IF sensor signal received:
-            print("Motion detected!")
-        # ELSE:
-            print("No motion detected...")
+        pir.wait_for_motion()
+        print("Movement detected!")
 
 except KeyboardInterrupt:
     # if program interrupted by CTRL+C key press
-    print("Programme execution manually cancelled!")
+    print("Test ended!")
 
 except:
     # for all other errors
-    print("Error or exception occurred!")
+    print("An error or exception occurred!")
 
-finally:
-    # clean up any GPIO ports used on program exit
-    GPIO.cleanup()
+# note: pin state cleanup takes place at normal termination of script
+# or when exceptions are handled
