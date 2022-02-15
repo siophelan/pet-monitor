@@ -21,7 +21,6 @@ def main():
 
     camera.start_preview()  # enables camera to adjust to light settings
     take_photo()
-    take_photo()
     record_video()
     camera.stop_preview()   
 
