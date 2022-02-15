@@ -1,38 +1,54 @@
-# A script to control the camera module
+# A script to test the camera module
 
 from picamera import PiCamera
-from time import sleep
+from time import sleep, gmtime, strftime
 
+# create camera object; mirror view horizontally
 camera = PiCamera()
-# optional: set camera.resolution and/or camera.framerate
+camera.hflip = True
+# optional: set camera.resolution (x, y); camera.framerate
 # optional: configure other camera settings, e.g. camera.awb_mode; camera.exposure_mode; camera.ISO
 
-# function to capture still image and save to file with sequential numbering
-def takephoto():
-    image = 1               # set file count to 1
-    camera.start_preview()  # start preview mode to adjust to light settings
+# initialise filename variables as blank strings
+imgfile = ""
+vidfile = ""
+
+def main():
+    global imgfile
+    global vidfile
+    imgfile = strftime("/home/sio/Catcam/testimages/img-%y%m%d-%H%M%S.jpg", gmtime())
+    vidfile = strftime("/home/sio/Catcam/testvideos/vid-%y%m%d-%H%M%S.h264", gmtime())
+
+    camera.start_preview()  # enables camera to adjust to light settings
+    take_photo()
+    take_photo()
+    record_video()
+    camera.stop_preview()
+
+# function to capture still image with timestamped filename
+def take_photo():
     sleep(3)                # wait 3 seconds
-    camera.capture(
-        '/home/sio/testimages/Catcam/test%03d.jpg' % image)  # take photo; save to file path
-    image += 1              # increment file count
-    camera.stop_preview()   # end preview mode
+    camera.capture(imgfile) # take photo and save to file path
+    print("Photo taken!")
 
-
-# function to capture 10-second video and save to file with sequential numbering
-def takevideo():
-    video = 1               # set file count to 1
-    camera.start_preview()  # start preview mode to adjust to light settings
-    camera.start_recording(
-        '/home/sio/testvideos/Catcam/test%03d.h264' % video)  # begin video capture; save to file path
-    sleep(10)               # wait 10 seconds
+# function to capture 5-second video with timestamped filename
+def record_video():
+    camera.start_recording(vidfile)  # begin video capture and save to file path
+    sleep(10)               # wait 5 seconds
     camera.stop_recording() # stop video capture
-    video += 1              # increment file count
-    camera.stop_preview()   # end preview mode
+    print("Video recorded!")
 
+if __name__ == '__main__':
+    try:
+        main()
 
-# test functionality
-takephoto()
-takephoto()
+    except KeyboardInterrupt:
+        print("User exited camera application")
+        camera.close()
 
-takevideo()
-takevideo()
+    except:
+        print("Error or exception occurred")
+        camera.close()
+
+    finally:
+        camera.close()
