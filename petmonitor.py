@@ -17,8 +17,7 @@ def main():
 
         # on signal from PIR sensor
         movement_time = gmtime()
-        print("Movement detected at " + strftime(
-            "%H:%M:%S", movement_time) + "!")
+        print("Movement detected at " + strftime("%H:%M:%S", movement_time) + "!")
         camera.start_preview()        
 
         # file storage settings
@@ -32,23 +31,8 @@ def main():
         # first pass
         take_photo()
         record_video()
-        
-        # subsequent passes
-        #prev_move = movement_time
-        #new_move = datetime.now()
-        #five_mins = timedelta(minutes=5)
-        #thirty_secs = timedelta(seconds=30) # TEST ONLY
 
-        # establish time between timestamps
-        #if (new_move - prev_move) > thirty_secs:
-            #print("Over 30 seconds have passed!")
-            #timestamp = strftime("%y%m%d_%H%M%S", new_move)
-            #take_photo()
-            #record_video()
-        #else:
-            # continue to monitor for movement
-            #print("Still monitoring...")
-
+        # conditions for ending program
         pir.wait_for_no_motion()
         camera.stop_preview()
 
