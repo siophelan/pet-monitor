@@ -19,17 +19,19 @@ def main():
         camera.start_preview()
         
         # set variables
-        global imgfilepath, vidfilepath
+        global imgfilepath, vidfilepath, timestamp
         timestamp = strftime("%y%m%d_%H%M%S", gmtime())
         imgfilepath = (
-            "/home/sio/Catcam/testimages/img_{timestamp}.jpg".format(timestamp=timestamp))
+            "/home/sio/catcam/testimages/img_{timestamp}.jpg".format(timestamp=timestamp))
         vidfilepath = (
-            "/home/sio/Catcam/testvideos/vid_{timestamp}.h264".format(timestamp=timestamp))
+            "/home/sio/catcam/testvideos/vid_{timestamp}.h264".format(timestamp=timestamp))
         
-        # STILL TO FIGURE OUT:
-        # if time elapsed between timestamps is > 5 mins, then:
-        # take photo and record video
-        # else continue
+        # establish time between timestamps
+        #prev_timestamp = timestamp
+        #if (timestamp - prev_timestamp > 5):
+            #take_photo()
+            #record_video()
+        # else continue to monitor for movement
 
         take_photo()
         
@@ -42,14 +44,16 @@ def main():
 def take_photo():
     sleep(2)    # 2 second delay
     camera.capture(imgfilepath)
-    print("Photo taken!")
+    print("Activity detected at {timestamp}... photo taken!".format(timestamp=timestamp))
+    # create database entry
 
 # function to capture 10-second video with timestamped filename
 def record_video():
     camera.start_recording(vidfilepath)
-    sleep(10)   # 10 second clip
+    sleep(10)   # record for 10 seconds
     camera.stop_recording()
-    print("Video recorded!")
+    print("Activity detected at {timestamp}... video recorded!".format(timestamp=timestamp))
+    # create database entry
 
 # code to execute
 if __name__ == "__main__":
