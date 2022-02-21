@@ -2,7 +2,7 @@
 
 from gpiozero import MotionSensor
 from picamera import PiCamera
-from time import sleep, strftime, gmtime
+from time import sleep, strftime
 from datetime import datetime, timedelta
 
 pir = MotionSensor(17)
@@ -25,8 +25,11 @@ def main():
         camera.start_preview()
         sleep(2)
         
-        # functions working - now need to loop
-        # and incorporate timedelta check
+        ##########################################################
+        # TESTING FUNCTIONS
+        # functions working - now need to loop continuously
+        # and incorporate timedelta interval check for periodic 
+        # image and video capture
         take_photo()
         update_log()
         record_video()
@@ -36,6 +39,8 @@ def main():
         update_log()
         record_video()
         print("Still monitoring...")
+        
+        ##########################################################
 
         # conditions for ending program
         pir.wait_for_no_motion()
@@ -57,7 +62,7 @@ def record_video():
     camera.stop_recording()
     print("Video recorded!")
 
-# function to log the activity
+# placeholder function to log the activity - to be replaced by a function to update database
 def update_log():
     log = open("/home/sio/myssd/petmonitor/log.txt", "a")
     log_time = datetime.now().strftime("%H:%M:%S, %d-%m-%y")
