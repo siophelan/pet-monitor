@@ -7,30 +7,35 @@ from datetime import datetime, timedelta
 
 pir = MotionSensor(17)
 camera = PiCamera()
-camera.hflip = True
+camera.rotation = 270
+timestamp = ""
 
 def main():
-    print("### Testing motion capture (enter CTRL+C to end) ###")
+    
+    print("-----Testing motion capture (enter CTRL+C to end)-----")
 
     while True:
         pir.wait_for_motion()
 
         # on signal from PIR sensor
-        movement_time = gmtime()
-        print("Movement detected at " + strftime("%H:%M:%S", movement_time) + "!")
-        camera.start_preview()        
-
-        # file storage settings
-        global imgfilepath, vidfilepath
-        timestamp = strftime("%y%m%d_%H%M%S", movement_time)
-        imgfilepath = (
-            "/home/sio/myssd/petmonitor/images/img_{timestamp}.jpg".format(timestamp=timestamp))
-        vidfilepath = (
-            "/home/sio/myssd/petmonitor/videos/vid_{timestamp}.h264".format(timestamp=timestamp))
+        time_a = datetime.now()
+        time_b = ""
+        print("Movement detected at " + time_a.strftime(
+            "%H:%M:%S"))
+        camera.start_preview()
+        sleep(2)
         
-        # first pass
+        # functions working - now need to loop
+        # and incorporate timedelta check
         take_photo()
+        update_log()
         record_video()
+        print("Still monitoring...")
+        sleep(10)
+        take_photo()
+        update_log()
+        record_video()
+        print("Still monitoring...")
 
         # conditions for ending program
         pir.wait_for_no_motion()
@@ -38,18 +43,27 @@ def main():
 
 # function to capture still image with timestamped filename
 def take_photo():
-    sleep(2)    # 2 second delay
-    camera.capture(imgfilepath)
+    global timestamp
+    timestamp = datetime.now().strftime("%y%m%d_%H%M%S")
+    camera.capture("/home/sio/myssd/petmonitor/images/img_{timestamp}.jpg".format(timestamp=timestamp))
     print("Photo taken!")
-    # create database entry
 
-# function to capture 10-second video with timestamped filename
+# function to capture 5-second video with timestamped filename
 def record_video():
-    camera.start_recording(vidfilepath)
-    sleep(10)   # record for 10 seconds
+    global timestamp
+    timestamp = datetime.now().strftime("%y%m%d_%H%M%S")
+    camera.start_recording("/home/sio/myssd/petmonitor/videos/vid_{timestamp}.h264".format(timestamp=timestamp))
+    sleep(5)   # record for 5 seconds
     camera.stop_recording()
     print("Video recorded!")
-    # create database entry
+
+# function to log the activity
+def update_log():
+    log = open("/home/sio/myssd/petmonitor/log.txt", "a")
+    log_time = datetime.now().strftime("%H:%M:%S, %d-%m-%y")
+    log.write("Activity logged at {timestamp}.\n".format(timestamp=log_time))
+    log.close()
+    print("Log updated!")
 
 # code to execute
 if __name__ == "__main__":
