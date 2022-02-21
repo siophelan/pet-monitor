@@ -2,14 +2,15 @@
 
 from gpiozero import MotionSensor
 from picamera import PiCamera
-from time import sleep, gmtime, strftime
+from time import sleep, localtime, strftime
+from datetime import timedelta
 
 pir = MotionSensor(17)
 camera = PiCamera()
 camera.hflip = True
 
 def main():
-    print("Testing motion capture (enter CTRL+C to end)")
+    print("### Testing motion capture (enter CTRL+C to end) ###")
 
     while True:
         pir.wait_for_motion()
@@ -17,25 +18,30 @@ def main():
         # on signal from PIR sensor
         print("Movement detected!")
         camera.start_preview()
-        
-        # set variables
+        movement_time = localtime()
+
+        # file storage
         global imgfilepath, vidfilepath, timestamp
-        timestamp = strftime("%y%m%d_%H%M%S", gmtime())
+        timestamp = strftime("%y%m%d_%H%M%S", movement_time)
         imgfilepath = (
             "/home/sio/catcam/testimages/img_{timestamp}.jpg".format(timestamp=timestamp))
         vidfilepath = (
             "/home/sio/catcam/testvideos/vid_{timestamp}.h264".format(timestamp=timestamp))
         
+        # first pass
+        take_photo()
+        record_video()
+        
+        # subsequent passes
+        prev_move = movement_time
+        new_move = localtime()
+        five_mins = timedelta(minutes=5)
+
         # establish time between timestamps
-        #prev_timestamp = timestamp
-        #if (timestamp - prev_timestamp > 5):
+        #if (new_move - prev_move > five_mins):
             #take_photo()
             #record_video()
         # else continue to monitor for movement
-
-        take_photo()
-        
-        record_video()
 
         pir.wait_for_no_motion()
         camera.stop_preview()
