@@ -37,7 +37,7 @@ def main():
         record_video()
         print("Still monitoring...")
 
-        # end program when no movement detected
+        # conditions for ending program
         pir.wait_for_no_motion()
         camera.stop_preview()
 
