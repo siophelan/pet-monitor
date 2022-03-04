@@ -1,4 +1,5 @@
-# A script to control the motion capture component of the pet monitoring station
+""" A script to control the motion capture element 
+of the pet monitoring station """
 
 from gpiozero import MotionSensor
 from picamera import PiCamera
@@ -9,60 +10,82 @@ pir = MotionSensor(17)
 camera = PiCamera()
 camera.rotation = 270
 timestamp = ""
+interval = timedelta(seconds=30)
 
 def main():
     
-    print("-----Testing motion capture (enter CTRL+C to end)-----")
+    print("-----Entering motion capture mode-----")
+    print("CTRL+C to end")
 
+    sleep(5) # slight delay allows tester to change position
+
+    # outer loop executed once only
     while True:
+
+        # start monitoring
         pir.wait_for_motion()
 
-        # on signal from PIR sensor
-        time_a = datetime.now()
-        time_b = ""
-        print("Movement detected at " + time_a.strftime(
+        # first activity detected
+        point_in_time = datetime.now()
+        print("Movement detected at " + point_in_time.strftime(
             "%H:%M:%S"))
         camera.start_preview()
         sleep(2)
-        
-        ##########################################################
-        # TESTING FUNCTIONS
-        # functions working - now need to loop continuously
-        # and incorporate timedelta interval check for periodic 
-        # image and video capture
         take_photo()
         update_log()
         record_video()
-        print("Still monitoring...")
-        sleep(10)
-        take_photo()
-        update_log()
-        record_video()
-        print("Still monitoring...")
         
-        ##########################################################
+        # inner loop executed until completion
+        # consider changing to countdown-based loop, e.g. for the next hour
+        while True:
 
-        # conditions for ending program
-        pir.wait_for_no_motion()
-        camera.stop_preview()
+            # continue to monitor
+            pir.wait_for_motion()
 
-# function to capture still image with timestamped filename
+            # new activity detected
+            new_point_in_time = datetime.now()
+            print("Movement detected at " + new_point_in_time.strftime(
+                "%H:%M:%S"))
+            
+            # sufficient time passed since last activity
+            if (new_point_in_time - point_in_time) > interval:
+
+                # log new activity
+                take_photo()
+                update_log()
+                record_video()
+
+                # reset original point_in_time
+                point_in_time = new_point_in_time
+
+                # return to start of inner while loop
+            
+            else:
+                print("Still monitoring...")
+                
+                # return to start of inner while loop
+                
+            # no activity detected
+            pir.wait_for_no_motion()
+            camera.stop_preview()
+
+# function to capture still image
 def take_photo():
     global timestamp
     timestamp = datetime.now().strftime("%y%m%d_%H%M%S")
     camera.capture("/home/sio/myssd/petmonitor/images/img_{timestamp}.jpg".format(timestamp=timestamp))
     print("Photo taken!")
 
-# function to capture 5-second video with timestamped filename
+# function to capture 10-second video
 def record_video():
     global timestamp
     timestamp = datetime.now().strftime("%y%m%d_%H%M%S")
     camera.start_recording("/home/sio/myssd/petmonitor/videos/vid_{timestamp}.h264".format(timestamp=timestamp))
-    sleep(5)   # record for 5 seconds
+    sleep(10)   # record for 10 seconds
     camera.stop_recording()
     print("Video recorded!")
 
-# placeholder function to log the activity - to be replaced by a function to update database
+# placeholder function to log the activity
 def update_log():
     log = open("/home/sio/myssd/petmonitor/log.txt", "a")
     log_time = datetime.now().strftime("%H:%M:%S, %d-%m-%y")
