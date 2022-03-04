@@ -9,8 +9,8 @@ from datetime import datetime, timedelta
 pir = MotionSensor(17)
 camera = PiCamera()
 camera.rotation = 270
-timestamp = ""
-interval = timedelta(seconds=30)
+timestamp = ""                      # will update dynamically for filenames
+interval = timedelta(seconds=30)    # minimum time between captures
 
 def main():
     
@@ -19,7 +19,7 @@ def main():
 
     sleep(5) # slight delay allows tester to change position
 
-    # outer loop executed once only
+    # outer while loop should execute once only
     while True:
 
         # start monitoring
@@ -27,15 +27,14 @@ def main():
 
         # first activity detected
         point_in_time = datetime.now()
-        print("Movement detected at " + point_in_time.strftime(
-            "%H:%M:%S"))
+        print("Movement detected at " + point_in_time.strftime("%H:%M:%S"))
         camera.start_preview()
         sleep(2)
         take_photo()
         update_log()
         record_video()
         
-        # inner loop executed until completion
+        # inner while loop executed until completion
         # consider changing to countdown-based loop, e.g. for the next hour
         while True:
 
@@ -44,10 +43,9 @@ def main():
 
             # new activity detected
             new_point_in_time = datetime.now()
-            print("Movement detected at " + new_point_in_time.strftime(
-                "%H:%M:%S"))
+            print("Movement detected at " + new_point_in_time.strftime("%H:%M:%S"))
             
-            # sufficient time passed since last activity
+            # sufficient time (see interval) elapsed since last recorded activity
             if (new_point_in_time - point_in_time) > interval:
 
                 # log new activity
@@ -55,7 +53,7 @@ def main():
                 update_log()
                 record_video()
 
-                # reset original point_in_time
+                # reset original point_in_time to latest recorded activity
                 point_in_time = new_point_in_time
 
                 # return to start of inner while loop
