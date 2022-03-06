@@ -3,19 +3,21 @@ of the pet monitoring station """
 
 from gpiozero import MotionSensor
 from picamera import PiCamera
-from time import sleep, strftime
+from time import sleep
 from datetime import datetime, timedelta
 
 pir = MotionSensor(17)
 camera = PiCamera()
 camera.rotation = 270
-timestamp = ""                      # will update dynamically for filenames
-interval = timedelta(seconds=30)    # minimum time between captures
+TIMESTAMP = ""                              # will update dynamically for filenames
+interval = timedelta(seconds=30)            # minimum time between captures
+program_duration = timedelta(minutes=30)    # time that program should run for
 
 def main():
     
     print("-----Entering motion capture mode-----")
     print("CTRL+C to end")
+    start_time = datetime.now() # program start time
 
     sleep(5) # slight delay allows tester to change position
 
@@ -35,7 +37,6 @@ def main():
         record_video()
         
         # inner while loop executed until completion
-        # consider changing to countdown-based loop, e.g. for the next hour
         while True:
 
             # continue to monitor
@@ -46,7 +47,7 @@ def main():
             print("Movement detected at " + new_point_in_time.strftime("%H:%M:%S"))
             
             # sufficient time (see interval) elapsed since last recorded activity
-            if (new_point_in_time - point_in_time) > interval:
+            if (new_point_in_time - point_in_time) >= interval:
 
                 # log new activity
                 take_photo()
@@ -62,23 +63,27 @@ def main():
                 print("Still monitoring...")
                 
                 # return to start of inner while loop
-                
-            # no activity detected
-            pir.wait_for_no_motion()
-            camera.stop_preview()
 
+            sleep(1)    # program sleeps to reduce load on CPU
+
+            #pir.wait_for_no_motion() # replaced with loop below
+
+            # conditions for program end
+            if (datetime.now() - start_time) >= program_duration:
+                camera.stop_preview()
+            
 # function to capture still image
 def take_photo():
-    global timestamp
-    timestamp = datetime.now().strftime("%y%m%d_%H%M%S")
-    camera.capture("/home/sio/myssd/petmonitor/images/img_{timestamp}.jpg".format(timestamp=timestamp))
+    global TIMESTAMP
+    TIMESTAMP = datetime.now().strftime("%y%m%d_%H%M%S")
+    camera.capture("/home/sio/myssd/petmonitor/images/img_{timestamp}.jpg".format(timestamp=TIMESTAMP))
     print("Photo taken!")
 
 # function to capture 10-second video
 def record_video():
-    global timestamp
-    timestamp = datetime.now().strftime("%y%m%d_%H%M%S")
-    camera.start_recording("/home/sio/myssd/petmonitor/videos/vid_{timestamp}.h264".format(timestamp=timestamp))
+    global TIMESTAMP
+    TIMESTAMP = datetime.now().strftime("%y%m%d_%H%M%S")
+    camera.start_recording("/home/sio/myssd/petmonitor/videos/vid_{timestamp}.h264".format(timestamp=TIMESTAMP))
     sleep(10)   # record for 10 seconds
     camera.stop_recording()
     print("Video recorded!")
