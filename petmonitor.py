@@ -9,23 +9,25 @@ from datetime import datetime, timedelta
 
 pir = MotionSensor(17)
 camera = PiCamera()
-camera.rotation = 270
-TIMESTAMP = ""                          # updates dynamically for filenames
+camera.rotation = 270                   # adjust as required for camera position
+
 interval = timedelta(seconds=30)        # minimum time between captures
 program_duration = timedelta(minutes=2) # time that program should run for
 
+save_time = ""                          # updates dynamically for filenames
+
 # function to capture still image
 def take_photo():
-    global TIMESTAMP
-    TIMESTAMP = datetime.now().strftime("%y%m%d_%H%M%S")
-    camera.capture("/home/sio/myssd/petmonitor/images/img_{timestamp}.jpg".format(timestamp=TIMESTAMP))
+    global save_time
+    save_time = datetime.now().strftime("%y%m%d_%H%M%S")
+    camera.capture("/home/sio/myssd/petmonitor/images/img_{timestamp}.jpg".format(timestamp=save_time))
     print("Photo taken!")
 
 # function to capture 10-second video
 def record_video():
-    global TIMESTAMP
-    TIMESTAMP = datetime.now().strftime("%y%m%d_%H%M%S")
-    camera.start_recording("/home/sio/myssd/petmonitor/videos/vid_{timestamp}.h264".format(timestamp=TIMESTAMP))
+    global save_time
+    save_time = datetime.now().strftime("%y%m%d_%H%M%S")
+    camera.start_recording("/home/sio/myssd/petmonitor/videos/vid_{timestamp}.h264".format(timestamp=save_time))
     sleep(10)   # record for 10 seconds
     camera.stop_recording()
     print("Video recorded!")
@@ -40,7 +42,8 @@ def update_log():
 
 def main():
     
-    start_time = datetime.now() # program start time
+    start_time = datetime.now()
+    end_time = start_time + program_duration
     
     print("-----Entering motion capture mode-----")
     print(str(start_time))
@@ -94,14 +97,15 @@ def main():
             sleep(1)    # program sleeps to reduce load on CPU
 
             # conditions for program end
-            if (datetime.now() - start_time) >= program_duration:
+            if (datetime.now() >= end_time):
                 camera.stop_preview()
-                return program_duration
+                print("Program ended at " + datetime.now().strftime("%H:%M:%S"))
+                return
 
 # code to execute
 if __name__ == "__main__":
     try:
-        run_time = main()
+        main()
 
     except KeyboardInterrupt:
         # program interrupted by CTRL+C keypress
@@ -115,5 +119,4 @@ if __name__ == "__main__":
 
     finally:
         camera.close()
-        print("Program ended after {x} minutes.".format(x=run_time))
         print("Goodbye!")
