@@ -18,16 +18,19 @@ def connect_to_DB(db_file):
 
 def add_record(conn, data):
 
-    # pseudocode for query, need to finetune
+    # pseudocode to insert a row of data, need to finetune
     sql = '''INSERT INTO activity(date("now"), time("now"), last_activity("lastrowid")) VALUES(?,?,?)'''
-
+    
+    # create a Cursor object
     cur = conn.cursor()
 
     # execute the query
     cur.execute(sql, data)
-
+    
+    # commit the changes
     conn.commit()
-
+    
+    # return the ID of the newly-created record
     return cur.lastrowid
 
 def main():
