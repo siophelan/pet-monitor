@@ -1,5 +1,6 @@
-""" A script to control the motion capture element 
-of the pet monitoring station """
+""" A script to control the motion capture element of 
+the pet monitoring station. The program duration and 
+activity capture interval can be adjusted as required """
 
 from gpiozero import MotionSensor
 from picamera import PiCamera
@@ -9,69 +10,10 @@ from datetime import datetime, timedelta
 pir = MotionSensor(17)
 camera = PiCamera()
 camera.rotation = 270
-TIMESTAMP = ""                              # will update dynamically for filenames
-interval = timedelta(seconds=30)            # minimum time between captures
-program_duration = timedelta(minutes=30)    # time that program should run for
+TIMESTAMP = ""                          # updates dynamically for filenames
+interval = timedelta(seconds=30)        # minimum time between captures
+program_duration = timedelta(minutes=2) # time that program should run for
 
-def main():
-    
-    print("-----Entering motion capture mode-----")
-    print("CTRL+C to end")
-    start_time = datetime.now() # program start time
-
-    sleep(5) # slight delay allows tester to change position
-
-    # outer while loop should execute once only
-    while True:
-
-        # start monitoring
-        pir.wait_for_motion()
-
-        # first activity detected
-        point_in_time = datetime.now()
-        print("Movement detected at " + point_in_time.strftime("%H:%M:%S"))
-        camera.start_preview()
-        sleep(2)
-        take_photo()
-        update_log()
-        record_video()
-        
-        # inner while loop executed until completion
-        while True:
-
-            # continue to monitor
-            pir.wait_for_motion()
-
-            # new activity detected
-            new_point_in_time = datetime.now()
-            print("Movement detected at " + new_point_in_time.strftime("%H:%M:%S"))
-            
-            # sufficient time (see interval) elapsed since last recorded activity
-            if (new_point_in_time - point_in_time) >= interval:
-
-                # log new activity
-                take_photo()
-                update_log()
-                record_video()
-
-                # reset original point_in_time to latest recorded activity
-                point_in_time = new_point_in_time
-
-                # return to start of inner while loop
-            
-            else:
-                print("Still monitoring...")
-                
-                # return to start of inner while loop
-
-            sleep(1)    # program sleeps to reduce load on CPU
-
-            #pir.wait_for_no_motion() # replaced with loop below
-
-            # conditions for program end
-            if (datetime.now() - start_time) >= program_duration:
-                camera.stop_preview()
-            
 # function to capture still image
 def take_photo():
     global TIMESTAMP
@@ -96,20 +38,82 @@ def update_log():
     log.close()
     print("Log updated!")
 
+def main():
+    
+    start_time = datetime.now() # program start time
+    
+    print("-----Entering motion capture mode-----")
+    print(str(start_time))
+    print("CTRL+C to end\n")
+
+    sleep(5) # slight delay allows tester to change position
+
+    # outer loop executes once only
+    while True:
+
+        # start monitoring
+        pir.wait_for_motion()
+
+        # first activity detected
+        point_in_time = datetime.now()
+        print("Movement detected at " + point_in_time.strftime("%H:%M:%S"))
+        
+        # allow camera to adjust to light
+        camera.start_preview()
+        sleep(2)    
+
+        # record activity
+        take_photo()
+        update_log()
+        record_video()
+        
+        # inner loop executed for remainder of program
+        while True:
+
+            # continue to monitor
+            pir.wait_for_motion()
+
+            # new activity detected
+            new_point_in_time = datetime.now()
+            print("Movement detected at " + new_point_in_time.strftime("%H:%M:%S"))
+            
+            # sufficient time (see interval) elapsed since last recorded activity
+            if (new_point_in_time - point_in_time) >= interval:
+
+                # log new activity
+                take_photo()
+                update_log()
+                record_video()
+
+                # reset original point_in_time to latest recorded activity
+                point_in_time = new_point_in_time
+            
+            else:
+                print("(Activity not logged)")
+
+            sleep(1)    # program sleeps to reduce load on CPU
+
+            # conditions for program end
+            if (datetime.now() - start_time) >= program_duration:
+                camera.stop_preview()
+                return program_duration
+
 # code to execute
 if __name__ == "__main__":
     try:
-        main()
+        run_time = main()
 
     except KeyboardInterrupt:
-        # if program interrupted by CTRL+C key press
+        # program interrupted by CTRL+C keypress
         print("User exited program!")
         camera.close()
 
-    except:
+    except Exception:
         # for all other errors
         print("An error or exception occurred!")
         camera.close()
 
     finally:
         camera.close()
+        print("Program ended after {x} minutes.".format(x=run_time))
+        print("Goodbye!")
