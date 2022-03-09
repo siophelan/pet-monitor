@@ -7,13 +7,18 @@ from picamera import PiCamera
 from time import sleep
 from datetime import datetime, timedelta
 
+# IR sensor setup
 pir = MotionSensor(17)
+
+# camera setup
 camera = PiCamera()
 camera.rotation = 270                   # adjust as required for camera position
 
+# runtime setup
 interval = timedelta(seconds=30)        # minimum time between captures
 program_duration = timedelta(minutes=2) # time that program should run for
 
+# filename timestamp variable
 save_time = ""                          # updates dynamically for filenames
 
 # function to capture still image
