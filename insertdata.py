@@ -5,7 +5,9 @@ from sqlite3 import Error
 from datetime import datetime
 
 def connect_to_DB(db_file):
-    
+    # parameter: filepath to database
+
+    # create and return connection
     conn = None
 
     try:
@@ -17,15 +19,15 @@ def connect_to_DB(db_file):
     return conn
 
 def add_record(conn, data):
+    # parameters: connection, data to be passed to SQL query
 
     # syntax for SQL query
-    #sql = '''INSERT INTO user(name, email, password) VALUES(?,?,?)'''
     sql = '''INSERT INTO activity(date, time, last_activity) VALUES(?,?,?)'''
 
     #create a cursor object
     cur = conn.cursor()
 
-    # execute the query
+    # execute the SQL query
     cur.execute(sql, data)
 
     # commit the changes
@@ -34,49 +36,45 @@ def add_record(conn, data):
     # return the ID of the newly-created record
     return cur.lastrowid
 
-def add_user():
-    print("---Add a new user---")
-    # get values from user input
-    print("Name: ", end = "")
-    un = input()
-    print("Email: ", end ="")
-    email = input()
-    print("Password: ", end = "")
-    pw = input()
-    return un, email, pw
+def get_last_activity(conn):
+    # parameter: connection
 
-def add_activity():
-    print("---Add new activity---")
+    # create a cursor object
+    cur = conn.cursor()
+
+    # execute the SQL query
+    cur.execute("SELECT date, time FROM activity ORDER BY id DESC")
+
+    # get the values from the most recent record only
+    prev_date, prev_time = cur.fetchone()
+
+    # save timestamp as string
+    prev_timestamp = prev_date + " " + prev_time
+
+    # return timestamp
+    return prev_timestamp
+
+def add_activity(conn):
+    # parameter: connection
+    
     # get values from system clock
     date_now = datetime.now().strftime("%y-%m-%d")
     time_now = datetime.now().strftime("%H:%M:%S")
-    last_log = ""
+    
+    # get value from database
+    last_log = get_last_activity(conn)
+    
     return date_now, time_now, last_log
-
-def get_last_activity():
-    # continue working out tomorrow
-    #sql = '''SELECT FROM '''
-    pass
 
 def main():
     database = r"/home/sio/catcam/testdatabase.db"
-
-    # add a new user
-    #user_name, user_email, user_password = add_user()
-
-    # add activity data
-    curr_date, curr_time, prev_log = add_activity()
 
     # create database connection
     conn = connect_to_DB(database)
     with conn:
 
-        # values for new user
-        #new_user = (user_name, user_email, user_password)
-        #user_id = add_record(conn, new_user)
-        #print("New user added to database: record #", user_id)
-
         # values for new activity
+        curr_date, curr_time, prev_log = add_activity(conn)
         new_activity = (curr_date, curr_time, prev_log)
         activity_id = add_record(conn, new_activity)
         print("New activity added to database: record #", activity_id)
