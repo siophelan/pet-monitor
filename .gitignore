@@ -1,24 +1,16 @@
-### GitIgnore ###
+#------ gitignore ------#
 
-### Logs ###
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
+# Created by https://www.toptal.com/developers/gitignore/api/flask,visualstudiocode,python
 
-### Environments ###
+#-----------------------#
+
+### Flask ###
+instance/*
+!instance/.gitignore
+.webassets-cache
 .env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-.env.test
 
-### Python ###
+### Flask.Python Stack ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -47,6 +39,10 @@ share/python-wheels/
 *.egg
 MANIFEST
 
+# PyInstaller
+*.manifest
+*.spec
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
@@ -72,12 +68,38 @@ cover/
 
 # Flask stuff:
 instance/
-.webassets-cache
-!instance/.gitignore
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
 
 # PyBuilder
 .pybuilder/
 target/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
 
 # mkdocs documentation
 /site
@@ -92,6 +114,9 @@ dmypy.json
 
 # pytype static type analyzer
 .pytype/
+
+# Cython debug symbols
+cython_debug/
 
 ### VisualStudioCode ###
 .vscode/*
@@ -111,4 +136,12 @@ dmypy.json
 # Ignore all local history of files
 .history
 .ionide
+
+### Logs ###
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
 
