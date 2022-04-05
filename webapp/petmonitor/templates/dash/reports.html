@@ -1,0 +1,62 @@
+{% extends "dash.html" %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block title %}Photos{% endblock %}
+
+{% block sidebar %}
+<ul class="nav flex-column">
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('dash.dash') }}">
+            <i class="bi-speedometer2"></i>
+            Dashboard
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('dash.photos') }}">
+            <i class="bi-camera me-2"></i>
+            Photos
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('dash.videos') }}">
+            <i class="bi-camera-video me-2"></i>
+            Videos
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="#">
+            <i class="bi-activity me-2"></i>
+            Activity Reports
+        </a>
+    </li>
+</ul>
+
+<!-- Account management -->
+<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+    <span>Manage account</span>
+</h6>
+
+<ul class="nav flex-column mb-2">
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('profile.update') }}">
+            <i class="bi-person me-2"></i>
+            Update profile
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">
+            <i class="bi-plus-circle me-2"></i>
+            Add pet
+        </a>
+    </li>
+</ul>
+{% endblock %}
+
+{% block view %}
+<h1 class="h2">Activity Reports</h1>
+{% endblock %}
+
+{% block content %}{% endblock %}

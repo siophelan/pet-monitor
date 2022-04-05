@@ -1,0 +1,31 @@
+{% extends "index.html" %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block header %}
+<h1 class="h3 mb-3 fw-normal">{% block title %}Log in{% endblock %} to your account</h1>
+{% endblock %}
+
+{% block content %}
+<div id="signin-form">
+    <form method="post">
+        <div class="form-floating auth-form form-row">
+            <input type="email" class="form-control" id="floatingEmail" name="floatingEmail" placeholder="name@example.com" required>
+            <label for="floatingEmail">Email address</label>
+        </div>
+
+        <div class="form-floating mb-3 auth-form form-row">
+            <input type="password" class="form-control" id="floatingPassword" name="floatingPassword" placeholder="Password" required>
+            <label for="floatingPassword">Password</label>
+        </div>
+
+        <input type="submit" value="Log in" class="w-100 btn btn-lg btn-orange mb-3">
+
+    </form>
+
+    <p>Don't have an account yet? <a href="{{ url_for('auth.register') }}">Register</a></p>
+
+</div>
+{% endblock %}

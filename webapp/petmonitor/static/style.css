@@ -1,0 +1,72 @@
+@import url("https://fonts.googleapis.com/css?family=Raleway");
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css");
+
+html, body {
+  height: 100%;
+  background-color: #000000;
+}
+
+body {
+  background-color: #000000;
+  font-family: "Raleway", sans-serif;
+}
+
+/* Landing page -------------------------- */
+.bgimg {
+  background-image:url(/static/imgs/maine-coon-background.jpg);
+  min-height: 100%;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  align-items: center;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* Dashboard ----------------------------- */
+.dashboard {
+  display: flex;
+}
+
+
+/* Text ---------------------------------- */
+a {
+  color: #a86a37;
+}
+
+.auth-form {      /* floating form labels */
+  color: grey;  
+}
+
+.user-note {
+  color: grey;
+}
+
+.emphasis {
+  color:#c29371;
+  font-style: italic;
+}
+
+/* Custom button styling ----------------- */
+.btn-orange {
+  background-color:#D2691E;
+}
+
+.btn-orange:hover {
+  background-color: #b65a19;
+  color: white;
+}
+
+/* Forms --------------------------------- */
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  flex-grow: 1;
+  min-width: 300px;
+}
+
+.form-row {
+  flex-direction: row;
+  display: flex;
+}
