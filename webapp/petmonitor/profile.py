@@ -20,10 +20,8 @@ profile_bp = Blueprint('profile', __name__)
 def get_profile(id):
 
     profile = get_db().execute(
-        'SELECT caregiver.id, caregiver.first_name, caregiver.last_name, caregiver.phone_num, caregiver.email_address, pet.pet_name, pet.birth_year, species.species_type FROM caregiver'
-        ' JOIN pet_caregiver ON caregiver.id = pet_caregiver.caregiver_id'
-        ' JOIN pet ON pet.id = pet_caregiver.pet_id'
-        ' JOIN species ON species.id = pet.species_ID'
+        'SELECT caregiver.id, caregiver.first_name, caregiver.last_name, caregiver.phone_num,' 
+        ' caregiver.email_address FROM caregiver'
         ' WHERE caregiver.id = ?',
         (id,)
     ).fetchone()
