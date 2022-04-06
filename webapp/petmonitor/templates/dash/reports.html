@@ -59,4 +59,16 @@
 <h1 class="h2">Activity Reports</h1>
 {% endblock %}
 
-{% block content %}{% endblock %}
+{% block content %}
+<div class="row">
+    <!-- Activity chart -->
+    <div class="col">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h5 class="card-title">Recent activity</h5>
+                <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
