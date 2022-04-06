@@ -146,3 +146,5 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+### Project-specific files ###
+/audio
