@@ -50,7 +50,7 @@ def register():
 
             except db.IntegrityError:
                 # show error if email address already exists in database
-                error = f"User {email} is already registered."
+                error = f"User {email} is already registered!"
             else:
                 # redirect user to login view
                 return redirect(url_for('auth.login'))
@@ -76,10 +76,10 @@ def login():
 
         if user is None:
             # display error if user not in database
-            error = 'Incorrect username.'
+            error = 'Incorrect username!'
         elif not check_password_hash(user['password_hash'], pw):
             # display error if password hash check fails
-            error = 'Incorrect password.'
+            error = 'Incorrect password!'
         
         if error is None:
             # store user's id and displayname in new session
