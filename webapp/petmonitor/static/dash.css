@@ -115,3 +115,8 @@ audio {
   background-color: #b65a19;
   color: white;
 }
+
+/* Error messages */
+.flash {
+  color: rgb(213, 30, 30);
+}
