@@ -60,24 +60,57 @@
 {% endblock %}
 
 {% block content %}
-<table class="table">
-    <tr>
-        <th>First name</th>
-        <th>Last name</th>
-        <th>Phone number</th>
-        <th>Email address</th>
-        <th>Pet name</th>
-        <th>Birth year</th>
-        <th>Species</th>
-    </tr>
-    <tr>
-        <td>{{ profile['first_name'] }}</td>
-        <td>{{ profile['last_name'] }}</td>
-        <td>0{{ profile['phone_num'] }}</td>
-        <td>{{ profile['email_address'] }}</td>
-        <td>{{ profile['pet_name'] }}</td>
-        <td>{{ profile['birth_year'] }}</td>
-        <td>{{ profile['species_type'] }}</td>
-    </tr>
-</table>
+<div id="update-form">
+    <form method="post">
+        <div class="mb-3 row">
+            <label for="userFN" class="col-sm-2 col-form-label fw-bold">First name</label>
+            <div class="col-sm-5">
+                <input type="text" readonly class="form-control-plaintext" id="userFN" value="{{ profile['first_name'] }}">
+            </div>
+        </div>
+        
+        <div class="mb-3 row">
+            <label for="userLN" class="col-sm-2 col-form-label fw-bold">Last name</label>
+            <div class="col-sm-5">
+                <input type="text" readonly class="form-control-plaintext" id="userLN" value="{{ profile['last_name'] }}">
+            </div>
+        </div>
+        
+        <div class="mb-3 row">
+            <label for="inputPhone" class="col-sm-2 col-form-label">Phone</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" id="inputPhone" placeholder="0{{ profile['phone_num'] }}">
+            </div>
+        </div>
+        
+        <div class="mb-3 row">
+            <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+            <div class="col-sm-5">
+                <input type="email" class="form-control" id="inputEmail" placeholder="{{ profile['email_address'] }}">
+            </div>
+        </div>
+        
+        <div class="mb-3 row">
+            <label for="inputPW" class="col-sm-2 col-form-label">Password</label>
+            <div class="col-sm-5">
+                <input type="password" class="form-control" id="inputPW">
+            </div>
+        </div>
+        
+        <!--<div class="mb-3 row">
+            <label for="confirmPW" class="col-sm-2 col-form-label">Password</label>
+            <div class="col-sm-5">
+                <input type="password" class="form-control" id="confirmPW">
+            </div>
+        </div>-->
+
+        <div class="mx-auto">
+            <input type="submit" value="Update" class="btn btn-orange mb-3 mx-auto">
+        </div>
+
+    </form>
+
+    <!-- Space to show confirmation message -->
+    <div class="user-message"></div>
+</div>
 {% endblock %}
