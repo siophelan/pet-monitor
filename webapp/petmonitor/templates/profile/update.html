@@ -115,8 +115,6 @@
     </form>
 
     <!-- Space to show confirmation message or errors -->
-    <div class="user-message"></div>
-    
     {% for message in get_flashed_messages() %}
         <div class="flash">{{ message }}</div>
     {% endfor %}
