@@ -44,10 +44,11 @@ def update():
     # if user has submitted form
     if request.method == 'POST':
         
-        phone = request.form['floatingPhone']
-        email = request.form['floatingEmail']
-        pw = request.form['floatingPassword']
+        phone = request.form['inputPhone']
+        email = request.form['inputEmail']
+        pw = request.form['inputPassword']
         error = None
+        confirmation = None
 
         # validate inputs
         if not phone:
@@ -68,8 +69,13 @@ def update():
             )
             db.commit()
 
-            return redirect(url_for('dash.dash'))
+            # show confirmation message
+            confirmation = "Profile updated!"
+            flash(confirmation)
+
+            return redirect(url_for('profile.update'))
     
+    # regardless of form submission
     now = datetime.now()
     todayString = now.strftime("%A, %d %B %Y")
     profile = get_profile(user_id)

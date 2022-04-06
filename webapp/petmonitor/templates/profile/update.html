@@ -60,8 +60,11 @@
 {% endblock %}
 
 {% block content %}
+<!-- Container for update form -->
 <div id="update-form">
     <form method="post">
+
+        <!-- Disabled fields -->
         <div class="mb-3 row">
             <label for="userFN" class="col-sm-2 col-form-label fw-bold">First name</label>
             <div class="col-sm-5">
@@ -76,24 +79,25 @@
             </div>
         </div>
         
+        <!-- Input fields -->
         <div class="mb-3 row">
             <label for="inputPhone" class="col-sm-2 col-form-label">Phone</label>
             <div class="col-sm-5">
-                <input type="text" class="form-control" id="inputPhone" value="0{{ profile['phone_num'] }}">
+                <input type="text" class="form-control" id="inputPhone" name="inputPhone" value="0{{ profile['phone_num'] }}">
             </div>
         </div>
         
         <div class="mb-3 row">
             <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
             <div class="col-sm-5">
-                <input type="email" class="form-control" id="inputEmail" value="{{ profile['email_address'] }}">
+                <input type="email" class="form-control" id="inputEmail" name="inputEmail" value="{{ profile['email_address'] }}">
             </div>
         </div>
         
         <div class="mb-3 row">
             <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
             <div class="col-sm-5">
-                <input type="password" class="form-control" id="inputPassword">
+                <input type="password" class="form-control" id="inputPassword" name="inputPassword">
             </div>
         </div>
         
@@ -110,7 +114,12 @@
 
     </form>
 
-    <!-- Space to show confirmation message -->
+    <!-- Space to show confirmation message or errors -->
     <div class="user-message"></div>
-</div>
+    
+    {% for message in get_flashed_messages() %}
+        <div class="flash">{{ message }}</div>
+    {% endfor %}
+    
+</div> <!-- End of form container -->
 {% endblock %}
