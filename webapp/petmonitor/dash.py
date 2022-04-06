@@ -15,7 +15,7 @@ dash_bp = Blueprint('dash', __name__)
 
 # view 1: dashboard
 @dash_bp.route('/dash', methods=('GET', 'POST'))
-# @login_required   # Uncomment before going live!!
+@login_required
 def dash():
     
     user_id = session.get('user_id')
@@ -42,7 +42,7 @@ def dash():
 
 # view 2: photos
 @dash_bp.route('/photos', methods=('GET', 'POST'))
-# @login_required   # Uncomment before going live!!
+@login_required
 def photos():
     # db = get_db()
     # pull in stored images based on SQL query for set date range
@@ -56,7 +56,7 @@ def photos():
 
 # view 3: videos
 @dash_bp.route('/videos', methods=('GET', 'POST'))
-# @login_required   # Uncomment before going live!!
+@login_required
 def videos():
     # db = get_db()
     # pull in stored images based on SQL query for set date range
@@ -70,7 +70,7 @@ def videos():
 
 # view 4: reports
 @dash_bp.route('/reports', methods=('GET', 'POST'))
-# @login_required   # Uncomment before going live!!
+@login_required
 def reports():
     # db = get_db()
     # pull in data based on SQL query for set date range
