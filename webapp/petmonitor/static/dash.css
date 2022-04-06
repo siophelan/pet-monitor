@@ -97,13 +97,6 @@ body {
   box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
 }
 
-/* Footer */
-.footer-container {
-  position:absolute;
-  bottom:0;
-  width: 100%;
-}
-
 /* Audio controls */
 audio {
   width: 150px;
@@ -111,4 +104,14 @@ audio {
   box-shadow: 5px 5px 20px rgba(0,0, 0, 0.4);
   border-radius: 95px;
 
+}
+
+/* Custom button styling ----------------- */
+.btn-orange {
+  background-color:#D2691E;
+}
+
+.btn-orange:hover {
+  background-color: #b65a19;
+  color: white;
 }
