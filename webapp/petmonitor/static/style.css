@@ -70,3 +70,8 @@ input[type="password"] {
   flex-direction: row;
   display: flex;
 }
+
+/* Error messages */
+.flash {
+  color: rgb(213, 30, 30);
+}
