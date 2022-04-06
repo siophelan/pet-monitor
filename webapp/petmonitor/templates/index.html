@@ -68,20 +68,20 @@
                 <div id="content">
                     {% block content %}
                     
-                    <!-- Dynamic content depends on user login status -->
-                    {% if g.user %}
-                        <a href="/dash" class="btn btn-lg btn-orange" role="button">Dashboard</a>
-                        <a href="{{ url_for('auth.logout') }}" class="btn btn-lg btn-orange" role="button">Log Out</a>
-                    {% else %}
-                    <a href="{{ url_for('auth.login') }}" class="btn btn-lg btn-orange" role="button">Log In</a> or
-                    <a href="{{ url_for('auth.register') }}" class="btn btn-lg btn-orange" role="button">Register</a>
-                    {% endif %}
+                        <!-- Dynamic content depends on user login status -->
+                        {% if g.user %}
+                            <a href="/dash" class="btn btn-lg btn-orange" role="button">Dashboard</a>
+                            <a href="{{ url_for('auth.logout') }}" class="btn btn-lg btn-orange" role="button">Log Out</a>
+                        {% else %}
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-lg btn-orange" role="button">Log In</a> or
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-lg btn-orange" role="button">Register</a>
+                        {% endif %}
+
+                    {% endblock %}
 
                     {% for message in get_flashed_messages() %}
                         <div class="flash">{{ message }}</div>
                     {% endfor %}
-
-                    {% endblock %}
 
                 </div>
             
