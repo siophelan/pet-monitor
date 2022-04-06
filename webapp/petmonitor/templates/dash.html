@@ -218,14 +218,14 @@
                                     <script>
                                         function previewAudio() {
                                           if(document.getElementById('call').checked) {
-                                              document.getElementById("preview").innerHTML="<audio controls></audio>";
+                                              document.getElementById("preview").innerHTML="<audio controls><source src=" + "{{ url_for('static', filename='audio/pspsps.mp3') }}" + " type=" + "audio/mpeg" + ">Your browser does not support the audio preview!</audio>";
                                             } else if(document.getElementById('meow').checked) {
                                                 document.getElementById("preview").innerHTML=
-                                                "<audio controls><source src=" + "{{ url_for('static', filename='audio/cat_meow.mp3') }}" + " type=" + "audio/mpeg" + ">Your browser does not support the audio preview!</audio>";
+                                                "<audio controls><source src=" + "{{ url_for('static', filename='audio/meow.mp3') }}" + " type=" + "audio/mpeg" + ">Your browser does not support the audio preview!</audio>";
                                             } else if(document.getElementById('rustle').checked) {
-                                                document.getElementById("preview").innerHTML="<audio controls></audio>";
+                                                document.getElementById("preview").innerHTML="<audio controls><source src=" + "{{ url_for('static', filename='audio/paper.mp3') }}" + " type=" + "audio/mpeg" + ">Your browser does not support the audio preview!</audio>";
                                             } else if(document.getElementById('bird').checked) {
-                                                document.getElementById("preview").innerHTML="<audio controls></audio>";
+                                                document.getElementById("preview").innerHTML="<audio controls><source src=" + "{{ url_for('static', filename='audio/birdsong.mp3') }}" + " type=" + "audio/mpeg" + ">Your browser does not support the audio preview!</audio>";
                                             } else {
                                                 document.getElementById("preview").innerHTML="Select a sound to preview";
                                             }
