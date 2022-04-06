@@ -141,7 +141,7 @@
                         {% endblock %}
                     </div>
 
-                    <!-- Dynamic content -->
+                    <!-- Dynamic content uses Bootstrap grid system and will stack on smaller devices -->
                     {% block content %}
                     <div class="row">
 
@@ -158,29 +158,31 @@
                         <!-- Play sounds -->
                         <div class="col-sm-4">
                             <div class="card bg-light">
-                                <!-- TESTING -->
+
                                 <div class="card-body">
                                     <h5>Your pets</h5>
-                                    <table class="table">
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Species</th>
-                                            <th>Age</th>
-                                        </tr>
-                                        {% for pet in pets %}
-                                        <tr>
-                                            <td>{{ pet['pet_name'] }}</td>
-                                            <td>{{ pet['species_type'] }}</td>
-                                            <!--<td>{{ pet['birth_year'] }}</td>-->
-                                            <td>{{ pet['age'] }}</td>
-                                        </tr>
-                                        {% endfor %}
-                                    </table>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Species</th>
+                                                <th>Age</th>
+                                            </tr>
+                                            {% for pet in pets %}
+                                            <tr>
+                                                <td>{{ pet['pet_name'] }}</td>
+                                                <td>{{ pet['species_type'] }}</td>
+                                                <td>{{ pet['age'] }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </div>
                                 </div>
-                                <!-- END TESTING -->
+
                                 <div class="card-body">
                                     <h5 class="card-title">Interact with your pets</h5>
                                     <form>
+                                        <!-- Audio selection -->
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="audioBtn" id="call" onclick="previewAudio()">
                                             <label class="form-check-label" for="call">Call cat</label>
@@ -197,14 +199,13 @@
                                             <input class="form-check-input" type="radio" name="audioBtn" id="bird" onclick="previewAudio()">
                                             <label class="form-check-label" for="bird">Birdsong</label>
                                         </div>
-                                        <table class="table table-borderless mt-2">
-                                            <tr>
-                                                <td id="preview">
-                                                    <audio controls></audio>                                                    
-                                                </td>
-                                                <td><input class="btn btn-dark float-end mt-2" type="submit" value="Play sound"></td>
-                                            </tr>
-                                        </table>
+
+                                        <!-- Audio controls -->
+                                        <div class="d-flex justify-content-evenly flex-wrap mt-4">
+                                            <div id="preview" class="flex-fill"><audio controls></audio></div>
+                                            <div class="flex-fill"><input class="btn btn-dark mt-2" type="submit" value="Play sound"></div>
+                                        </div>
+
                                     </form>
 
                                     <!-- JavaScript to handle sound previews -->
