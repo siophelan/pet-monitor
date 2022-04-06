@@ -241,15 +241,24 @@
 
                 </main>
 
+                {% block footer %}
+                <footer class="footer mt-auto py-3 text-center">
+                    <div class="footer-container">
+                        <span class="text-muted">&copy; 2022 Siobh&aacute;n Phelan | <a href="mailto:B00139195@mytudublin.ie">Contact</a></span>
+                    </div>
+                </footer>
+                {% endblock %}
+
             </div>
         </div>  <!-- End of page container -->
 
-        <footer class="text-center">
-            {% block footer %}
-            <br>
-            <p>&copy; 2022 Siobh&aacute;n Phelan | <a href="mailto:B00139195@mytudublin.ie">Contact</a></p>
-            {% endblock %}
+        <!--
+        <footer class="footer mt-auto py-3 text-center">
+            <div class="footer-container">
+                <span class="text-muted">&copy; 2022 Siobh&aacute;n Phelan | <a href="mailto:B00139195@mytudublin.ie">Contact</a></span>
+            </div>
         </footer>
+        -->
 
         <!-- Bootstrap JS Bundle with Popper -->
         <script 
