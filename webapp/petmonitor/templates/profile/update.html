@@ -7,6 +7,7 @@
 {% block title %}Update Profile{% endblock %}
 
 {% block sidebar %}
+<!-- General dashboard links -->
 <ul class="nav flex-column">
     <li class="nav-item">
         <a class="nav-link" href="{{ url_for('dash.dash') }}">
@@ -47,7 +48,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="{{ url_for('profile.addpet') }}">
             <i class="bi-plus-circle me-2"></i>
             Add pet
         </a>
@@ -60,8 +61,8 @@
 {% endblock %}
 
 {% block content %}
-<!-- Container for update form -->
-<div id="update-form">
+<!-- Container for page content -->
+<div class="container">
     <form method="post">
 
         <!-- Disabled fields -->
@@ -119,5 +120,5 @@
         <div class="flash">{{ message }}</div>
     {% endfor %}
     
-</div> <!-- End of form container -->
+</div> <!-- End of page container -->
 {% endblock %}
