@@ -86,6 +86,17 @@ body {
   border-radius: 0;
 }
 
+
+/* Forms */
+.form-row {
+  flex-direction: row;
+  display: flex;
+}
+
+.floating-form-label {  
+  color: grey;  
+}
+
 .form-control-dark {
   color: #fff;
   background-color: rgba(255, 255, 255, .1);

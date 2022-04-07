@@ -34,10 +34,6 @@ a {
   color: #a86a37;
 }
 
-.auth-form {      /* floating form labels */
-  color: grey;  
-}
-
 .user-note {
   color: grey;
 }
@@ -69,6 +65,10 @@ input[type="password"] {
 .form-row {
   flex-direction: row;
   display: flex;
+}
+
+.floating-form-label {  
+  color: grey;  
 }
 
 /* Error messages */
