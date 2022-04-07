@@ -20,7 +20,7 @@ def dash():
     
     user_id = session.get('user_id')
     now = datetime.now()
-    todayString = now.strftime("%A, %d %B %Y")
+    today_string = now.strftime("%A, %d %B %Y")
     
     loggedin = session.get('loggedin')
     if loggedin is None:
@@ -28,16 +28,16 @@ def dash():
     else:
         displayname = loggedin
     
-    petList = getPets(user_id)
+    pet_list = get_pets(user_id)
 
     # variables to send to client-side
-    bpVariables = {
-        'date' : todayString,
+    view_variables = {
+        'date' : today_string,
         'displayname' : displayname,
-        'pets' : petList
+        'pets' : pet_list
     }
 
-    return render_template('dash.html', **bpVariables)
+    return render_template('dash.html', **view_variables)
 
 
 # view 2: photos
@@ -83,7 +83,7 @@ def reports():
 
 
 # function to retrieve a pet
-def getPets(id):
+def get_pets(id):
 
     pets = get_db().execute(
         'SELECT caregiver.id, pet.pet_name, species.species_type, strftime("%Y", date()) - pet.birth_year as age FROM caregiver'

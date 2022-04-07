@@ -6,8 +6,6 @@ from flask import (
 
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from datetime import datetime
-
 from petmonitor.db import get_db
 
 # create an 'auth' Blueprint 
