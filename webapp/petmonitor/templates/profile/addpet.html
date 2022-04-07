@@ -4,9 +4,10 @@
     {{ super() }}
 {% endblock %}
 
-{% block title %}Update Profile{% endblock %}
+{% block title %}Add a Pet{% endblock %}
 
 {% block sidebar %}
+<!-- General dashboard links -->
 <ul class="nav flex-column">
     <li class="nav-item">
         <a class="nav-link" href="{{ url_for('dash.dash') }}">
@@ -56,7 +57,80 @@
 {% endblock %}
 
 {% block view %}
-<h1 class="h2">Add a Pet</h1>
+<h1 class="h2">Pets</h1>
 {% endblock %}
 
-{% block content %}{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-sm-8">
+
+        <!-- Summary of registered pets -->
+        <div class="card bg-light mb-2">
+            <div class="card-body">
+                <h5>Your current pets</h5>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>Name</th>
+                            <th>Species</th>
+                            <th>Age</th>
+                        </tr>
+                        {% for pet in pets %}
+                        <tr>
+                            <td>{{ pet['pet_name'] }}</td>
+                            <td>{{ pet['species_type'] }}</td>
+                            <td>{{ pet['age'] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Add a new pet -->
+        <div class="card bg-light mb-2">
+            <div class="card-body">
+                <h5>Add a new pet</h5>
+                <br>
+                <div class="container">
+                    <form method="post">
+                
+                        <!-- Input fields -->       
+                        <div class="form-floating floating-form-label form-row mb-2">
+                            <input type="text" class="form-control" id="floatingPetName" name="floatingPetName" placeholder="Pet name" required>
+                            <label for="floatingPetName">Pet name</label>
+                        </div>
+                        
+                        <div class="form-floating floating-form-label form-row mb-2">
+                            <input list="species" class="form-control" name="floatingSpecies" placeholder="Species" required>
+                            <datalist id="species">
+                                <option value="Cat">
+                                <option value="Dog">
+                            </datalist>
+                            <label for="floatingSpecies">Species</label>
+                        </div>
+                
+                        <div class="form-floating floating-form-label form-row mb-3">
+                            <input type="number" class="form-control" id="floatingYear" name="floatingYear" min="1900" max="{{ currYear }}">
+                            <label for="floatingYear">Year born, if known</label>
+                        </div>
+                
+                        <div class="mx-auto">
+                            <input type="submit" value="Add pet" class="btn btn-orange mb-3 mx-auto">
+                        </div>
+                
+                    </form>
+                    {% for message in get_flashed_messages() %}
+                        <div class="flash">{{ message }}</div>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock %}
