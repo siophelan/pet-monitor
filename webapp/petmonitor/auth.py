@@ -15,13 +15,14 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 # view 1: register
 @auth_bp.route('/register', methods=('GET', 'POST'))
 def register():
-    # if user has submitted form
+    # set variables if user has submitted form
     if request.method == 'POST':
         fname = request.form['floatingFN']
         lname = request.form['floatingLN']
         phone = request.form['floatingPhone']
         email = request.form['floatingEmail']
         pw = request.form['floatingPassword']
+        conf_pw = request.form['floatingConfirmPass']
         db = get_db()
         error = None
 
@@ -36,6 +37,10 @@ def register():
             error = 'You must provide an email address.'
         elif not pw:
             error = 'You must provide a password.'
+        elif not conf_pw:
+            error = 'You must confirm your password.'
+        elif (pw != conf_pw):
+            error = 'Your passwords do not match. Please try again!'
         
         if error is None:
             try:
@@ -53,6 +58,7 @@ def register():
                 # redirect user to login view
                 return redirect(url_for('auth.login'))
         
+        # display errors (if present)
         flash(error)
     
     return render_template('auth/register.html')
@@ -61,6 +67,7 @@ def register():
 # view 2: login
 @auth_bp.route('/login', methods=('GET', 'POST'))
 def login():
+    # set variables if user has submitted form
     if request.method == 'POST':
         email = request.form['floatingEmail']
         pw = request.form['floatingPassword']
@@ -88,6 +95,7 @@ def login():
             # redirect user to dashboard
             return redirect(url_for('dash.dash'))
         
+        # display errors (if present)
         flash(error)
 
     return render_template('auth/login.html')
