@@ -30,6 +30,8 @@ def update():
         phone = request.form['inputPhone']
         email = request.form['inputEmail']
         pw = request.form['inputPassword']
+        conf_pw = request.form['confirmPassword']
+        sql = "UPDATE caregiver SET phone_num = ?, email_address = ?, password_hash = ? WHERE id = ?"
         error = None
         confirmation = None
 
@@ -40,23 +42,57 @@ def update():
             error = 'You must provide an email address.'
         elif not pw:
             error = 'You must provide a password.'
+        elif (pw != conf_pw):
+            error = 'Your passwords do not match. Please try again!'
         
-        if error is not None:
-            flash(error)
-        else:
-            db = get_db()
-            db.execute(
-                'UPDATE caregiver SET phone_num = ?, email_address = ?, password_hash = ?'
-                ' WHERE id = ?',
-                (phone, email, generate_password_hash(pw), user_id)
-            )
-            db.commit()
+        # TESTING
+        if error is None:
+            try:
+                val = (phone, email, generate_password_hash(pw), user_id)
+                
+                # update database
+                db = get_db()
+                db.execute(sql, val)
+                db.commit()
+
+                # show confirmation message
+                confirmation = "Profile updated!"
+                flash(confirmation)
+
+            except Exception:
+                flash(Exception)
+            
+            else:
+                return redirect(url_for('profile.update'))
+
+        # display errors (if present)
+        flash(error)
+
+
+
+
+
+
+        # END TESTING
+        
+        
+        
+        #if error is not None:
+            #flash(error)
+        #else:
+            #db = get_db()
+            #db.execute(
+                #'UPDATE caregiver SET phone_num = ?, email_address = ?, password_hash = ?'
+                #' WHERE id = ?',
+                #(phone, email, generate_password_hash(pw), user_id)
+            #)
+            #db.commit()
 
             # show confirmation message
-            confirmation = "Profile updated!"
-            flash(confirmation)
+            #confirmation = "Profile updated!"
+            #flash(confirmation)
 
-            return redirect(url_for('profile.update'))
+            #return redirect(url_for('profile.update'))
     
     # regardless of form submission
     now = datetime.now()
