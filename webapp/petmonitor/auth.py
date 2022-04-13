@@ -101,22 +101,6 @@ def login():
     return render_template('auth/login.html')
 
 
-# function that runs before view functions
-@auth_bp.before_app_request
-def load_logged_in_user():
-
-    # read user id from session
-    user_id = session.get('user_id')
-
-    # g.user stores data for duration of request
-    if user_id is None:
-        g.user = None
-    else:
-        g.user = get_db().execute(
-            'SELECT * FROM caregiver WHERE id = ?', (user_id,)
-        ).fetchone()
-
-
 # view 3: logout
 @auth_bp.route('/logout')
 def logout():
@@ -124,6 +108,22 @@ def logout():
     # remove the user id from the session
     session.clear()
     return redirect(url_for('index'))
+
+
+# function that runs before auth view functions
+@auth_bp.before_app_request
+def load_logged_in_user():
+
+    # read user id from session
+    user_id = session.get('user_id')
+
+    # store user data in g for duration of request
+    if user_id is None:
+        g.user = None
+    else:
+        g.user = get_db().execute(
+            'SELECT * FROM caregiver WHERE id = ?', (user_id,)
+        ).fetchone()
 
 
 # authentication wrapper for other views
