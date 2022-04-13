@@ -60,8 +60,8 @@ def update():
                 confirmation = "Profile updated!"
                 flash(confirmation)
 
-            except Exception:
-                error = "An exception occurred."
+            except Exception as e:
+                error = "An exception occurred: " + str(e)
             
             else:
                 return redirect(url_for('profile.update'))
@@ -92,12 +92,23 @@ def addpet():
 
     # set variables if user has submitted form
     if request.method == 'POST':
+
         p_name = request.form['floatingPetName']
 
+        # check species type
         if request.form['floatingSpecies'] == "Cat":
             p_species = 1
         else:
             p_species = 2
+        
+        # adapt SQL statement depending on whether birth year has been entered
+        if request.form['floatingYear'] is not None:
+            year = request.form['floatingYear']
+            sql = "INSERT INTO pet (pet_name, birth_year, species_ID) VALUES (?, ?, ?)"
+            val = (p_name, year, p_species)
+        else:
+            sql = "INSERT INTO pet (pet_name, species_ID) VALUES (?, ?)"
+            val = (p_name, p_species)
         
         error = None
         confirmation = None
@@ -110,15 +121,6 @@ def addpet():
 
         if error is None:
             try:
-                # check whether pet birth year has been entered
-                if request.form['floatingYear'] is not None:
-                    year = request.form['floatingYear']
-                    sql = "INSERT INTO pet (pet_name, birth_year, species_ID) VALUES (?, ?, ?)"
-                    val = (p_name, year, p_species)
-                else:
-                    sql = "INSERT INTO pet (pet_name, species_ID) VALUES (?, ?)"
-                    val = (p_name, p_species)
-
                 # update database (pet table)
                 db = get_db()
                 db.execute(sql, val)
@@ -141,8 +143,8 @@ def addpet():
                 confirmation = "Pet added!"
                 flash(confirmation)
             
-            except Exception:
-                error = "An exception occurred."
+            except Exception as e:
+                error = "An exception occurred: " + str(e)
             
             else:
                 return redirect(url_for('profile.addpet'))
@@ -164,6 +166,65 @@ def addpet():
     }
 
     return render_template('profile/addpet.html', **view_variables)
+
+
+# view 3: delete a pet
+@profile_bp.route('/deletepet', methods=('GET', 'POST'))
+@login_required
+def deletepet():
+
+    user_id = session.get('user_id')
+
+    # set variables if user has submitted form
+    if request.method == 'POST':
+        pet_to_delete = request.form['petSelect']
+
+        error = None
+        confirmation = None
+
+        # validate inputs
+        if not pet_to_delete:
+            error = "No pet selected!"
+
+        if error is None:
+            try:
+                first_sql = "DELETE FROM pet_caregiver WHERE pet_id = ?"
+                second_sql = "DELETE FROM pet WHERE id = ?"
+                val = (pet_to_delete, )
+
+                # delete selected record from the database
+                db = get_db()
+                db.execute(first_sql, val)  # from pet_caregiver table
+                db.execute(second_sql, val) # from pet table
+                db.commit()
+
+                # show confirmation message
+                confirmation = "Pet removed from database."
+                flash(confirmation)
+            
+            except Exception as e:
+                error = "An exception occurred: " + str(e)
+            
+            else:
+                return redirect(url_for('profile.deletepet'))
+        
+        # display errors (if present)
+        flash(error)
+
+    # regardless of form submission
+    now = datetime.now()
+    pets = get_pets(user_id)
+    curr_year = now.strftime("%Y")
+    year_not_age = int(curr_year)
+
+    # variables to send to client-side
+    view_variables = {
+        'pets' : pets,
+        'currYear' : curr_year,
+        'yearNotAge' : year_not_age
+    }
+
+    return render_template('profile/deletepet.html', **view_variables)
 
 
 # function to retrieve a user profile
