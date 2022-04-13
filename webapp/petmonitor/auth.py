@@ -133,6 +133,8 @@ def login_required(view):
 
         # redirect to login view if no user is stored
         if g.user is None:
+            error = "Please log in to view this page!"
+            flash(error)
             return redirect(url_for('auth.login'))
 
         # call original view and proceed as normal
