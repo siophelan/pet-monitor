@@ -32,11 +32,17 @@ def create_app(test_config=None):
         pass
     
 
-    # test page
+    # test pages
     @app.route('/testpage')
     def testpage():
         return 'We are live!'
-          
+    
+    @app.route('/testerr')
+    def testerr():
+        cats = ["Lambda", "Pi"]
+        one_cat = cats[2]
+        return one_cat
+
 
     # landing page for app
     @app.route('/')
@@ -50,8 +56,21 @@ def create_app(test_config=None):
             'time' : timeString,
             'date' : todayString
         }
-
         return render_template('index.html', **templateVariables)
+
+
+    # error handlers
+    @app.errorhandler(Exception)          
+    def basic_error(err):          
+        return "An error occurred: " + str(err)
+    
+    @app.errorhandler(404)
+    def page_not_found(err):
+        return render_template('/error/page_not_found.html', error=err), 404
+
+    @app.errorhandler(500)
+    def internal_server_error(err):
+        return render_template('/error/500.html', error=err), 500
 
 
     # import and call init_app function
