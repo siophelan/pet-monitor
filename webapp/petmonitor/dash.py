@@ -21,6 +21,7 @@ def dash():
     user_id = session.get('user_id')
     now = datetime.now()
     today_string = now.strftime("%A, %d %B %Y")
+    curr_year = int(now.strftime("%Y"))
     
     loggedin = session.get('loggedin')
     if loggedin is None:
@@ -33,6 +34,7 @@ def dash():
     # variables to send to client-side
     view_variables = {
         'date' : today_string,
+        'year_not_age' : curr_year,
         'displayname' : displayname,
         'pets' : pet_list
     }

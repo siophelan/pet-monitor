@@ -175,7 +175,12 @@
                                             <tr>
                                                 <td>{{ pet['pet_name'] }}</td>
                                                 <td>{{ pet['species_type'] }}</td>
-                                                <td>{{ pet['age'] }}</td>
+                                                <!-- Check that stored pet age is not a year -->
+                                                {% if pet['age'] >= year_not_age %}
+                                                    <td>Unknown</td>
+                                                {% else %}
+                                                    <td>{{ pet['age'] }}</td>
+                                                {% endif %}
                                             </tr>
                                             {% endfor %}
                                         </table>
