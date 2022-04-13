@@ -34,7 +34,7 @@ def dash():
     # variables to send to client-side
     view_variables = {
         'date' : today_string,
-        'year_not_age' : curr_year,
+        'yearNotAge' : curr_year,
         'displayname' : displayname,
         'pets' : pet_list
     }
