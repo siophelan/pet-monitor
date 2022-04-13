@@ -88,7 +88,7 @@ def reports():
 def get_pets(id):
 
     pets = get_db().execute(
-        'SELECT caregiver.id, pet.pet_name, species.species_type, strftime("%Y", date()) - pet.birth_year as age FROM caregiver'
+        'SELECT caregiver.id, pet.id as pet_id, pet.pet_name, species.species_type, strftime("%Y", date()) - pet.birth_year as age FROM caregiver'
         ' JOIN pet_caregiver ON caregiver.id = pet_caregiver.caregiver_id'
         ' JOIN pet ON pet.id = pet_caregiver.pet_id'
         ' JOIN species ON species.id = pet.species_ID'
