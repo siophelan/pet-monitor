@@ -28,19 +28,19 @@ def register():
 
         # validate inputs
         if not fname:
-            error = 'You must provide a first name.'
+            error = "You must provide a first name."
         elif not lname:
-            error = 'You must provide a last name.'
+            error = "You must provide a last name."
         elif not phone:
-            error = 'You must provide a phone number.'
+            error = "You must provide a phone number."
         elif not email:
-            error = 'You must provide an email address.'
+            error = "You must provide an email address."
         elif not pw:
-            error = 'You must provide a password.'
+            error = "You must provide a password."
         elif not conf_pw:
-            error = 'You must confirm your password.'
+            error = "You must confirm your password."
         elif (pw != conf_pw):
-            error = 'Your passwords do not match. Please try again!'
+            error = "Your passwords do not match. Please try again!"
         
         if error is None:
             try:
@@ -81,13 +81,13 @@ def login():
 
         if user is None:
             # display error if user not in database
-            error = 'Incorrect username!'
+            error = "Incorrect username!"
         elif not check_password_hash(user['password_hash'], pw):
             # display error if password hash check fails
-            error = 'Incorrect password!'
+            error = "Incorrect password!"
         
         if error is None:
-            # store user's id and displayname in new session
+            # store user id and displayname in new session
             session.clear()
             session['user_id'] = user['id']
             session['loggedin'] = user['first_name']
