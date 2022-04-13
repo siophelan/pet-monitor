@@ -1,10 +1,11 @@
 import functools
+from click import confirm
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import generate_password_hash
 from werkzeug.exceptions import abort
 
 from datetime import datetime
@@ -24,7 +25,7 @@ def update():
 
     user_id = session.get('user_id')
 
-    # if user has submitted form
+    # set variables if user has submitted form
     if request.method == 'POST':
         
         phone = request.form['inputPhone']
@@ -32,20 +33,20 @@ def update():
         pw = request.form['inputPassword']
         conf_pw = request.form['confirmPassword']
         sql = "UPDATE caregiver SET phone_num = ?, email_address = ?, password_hash = ? WHERE id = ?"
+        
         error = None
         confirmation = None
 
         # validate inputs
         if not phone:
-            error = 'You must provide a phone number.'
+            error = "You must provide a phone number."
         elif not email:
-            error = 'You must provide an email address.'
+            error = "You must provide an email address."
         elif not pw:
-            error = 'You must provide a password.'
+            error = "You must provide a password."
         elif (pw != conf_pw):
-            error = 'Your passwords do not match. Please try again!'
+            error = "Your passwords do not match. Please try again!"
         
-        # TESTING
         if error is None:
             try:
                 val = (phone, email, generate_password_hash(pw), user_id)
@@ -60,39 +61,13 @@ def update():
                 flash(confirmation)
 
             except Exception:
-                flash(Exception)
+                error = "An exception occurred."
             
             else:
                 return redirect(url_for('profile.update'))
 
         # display errors (if present)
         flash(error)
-
-
-
-
-
-
-        # END TESTING
-        
-        
-        
-        #if error is not None:
-            #flash(error)
-        #else:
-            #db = get_db()
-            #db.execute(
-                #'UPDATE caregiver SET phone_num = ?, email_address = ?, password_hash = ?'
-                #' WHERE id = ?',
-                #(phone, email, generate_password_hash(pw), user_id)
-            #)
-            #db.commit()
-
-            # show confirmation message
-            #confirmation = "Profile updated!"
-            #flash(confirmation)
-
-            #return redirect(url_for('profile.update'))
     
     # regardless of form submission
     now = datetime.now()
@@ -115,7 +90,7 @@ def addpet():
 
     user_id = session.get('user_id')
 
-    # if user has submitted form
+    # set variables if user has submitted form
     if request.method == 'POST':
         p_name = request.form['floatingPetName']
 
@@ -123,51 +98,57 @@ def addpet():
             p_species = 1
         else:
             p_species = 2
-            
-        if request.form['floatingYear'] is not None:
-            year = request.form['floatingYear']
-            sql = "INSERT INTO pet (pet_name, birth_year, species_ID) VALUES (?, ?, ?)"
-            val = (p_name, year, p_species)
-        else:
-            sql = "INSERT INTO pet (pet_name, species_ID) VALUES (?, ?)"
-            val = (p_name, p_species)
         
         error = None
         confirmation = None
 
         # validate inputs
         if not p_name:
-            error = 'You must provide a pet name.'
+            error = "You must provide a pet name."
         elif not p_species:
-            error = 'You must confirm the species.'
+            error = "You must confirm the species."
 
-        if error is not None:
-            flash(error)
-        else:
-            db = get_db()
-            db.execute(sql, val)
-            db.commit()
-            
-            # get  ID for last created record in pet, save as variable
-            pet = db.execute(
-            'SELECT * FROM pet ORDER BY id DESC'
-            ).fetchone()
-            pet_id = pet['id']
-                
-            db.execute(
+        if error is None:
+            try:
+                # check whether pet birth year has been entered
+                if request.form['floatingYear'] is not None:
+                    year = request.form['floatingYear']
+                    sql = "INSERT INTO pet (pet_name, birth_year, species_ID) VALUES (?, ?, ?)"
+                    val = (p_name, year, p_species)
+                else:
+                    sql = "INSERT INTO pet (pet_name, species_ID) VALUES (?, ?)"
+                    val = (p_name, p_species)
+
+                # update database (pet table)
+                db = get_db()
+                db.execute(sql, val)
+                db.commit()
+
+                # get ID for last created record in pet, save as variable
+                pet = db.execute(
+                'SELECT * FROM pet ORDER BY id DESC'
+                ).fetchone()
+                pet_id = pet['id']
+
+                # update database (pet_caregiver table)
+                db.execute(
                 "INSERT INTO pet_caregiver (pet_id, caregiver_id) VALUES (?, ?)",
                 (pet_id, user_id), 
-            )
-            db.commit()
+                )
+                db.commit()
 
-            # show confirmation message
-            confirmation = "Pet added!"
-            flash(confirmation)
-
-            return redirect(url_for('profile.update'))
+                # show confirmation message
+                confirmation = "Pet added!"
+                flash(confirmation)
+            
+            except Exception:
+                error = "An exception occurred."
+            
+            else:
+                return redirect(url_for('profile.addpet'))
         
-
-
+        # display errors (if present)
+        flash(error)
 
     # regardless of form submission
     now = datetime.now()
