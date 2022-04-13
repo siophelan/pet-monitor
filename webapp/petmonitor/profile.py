@@ -137,11 +137,13 @@ def addpet():
     now = datetime.now()
     pets = get_pets(user_id)
     curr_year = now.strftime("%Y")
+    year_not_age = int(curr_year)
 
     # variables to send to client-side
     view_variables = {
         'pets' : pets,
-        'currYear' : curr_year
+        'currYear' : curr_year,
+        'yearNotAge' : year_not_age
     }
 
     return render_template('profile/addpet.html', **view_variables)
