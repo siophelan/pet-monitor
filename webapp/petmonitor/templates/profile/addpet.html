@@ -105,6 +105,7 @@
                 <h5>Add a new pet</h5>
                 <br>
                 <div class="container">
+                    
                     <form method="post">
                 
                         <!-- Input fields -->       
@@ -132,6 +133,8 @@
                         </div>
                 
                     </form>
+
+                    <!-- Space to show confirmation message or errors -->
                     {% for message in get_flashed_messages() %}
                         <div class="flash">{{ message }}</div>
                     {% endfor %}
