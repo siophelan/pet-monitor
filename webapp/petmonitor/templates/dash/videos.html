@@ -15,7 +15,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link active" href="{{ url_for('dash.photos') }}">
+        <a class="nav-link" href="{{ url_for('dash.photos') }}">
             <i class="bi-camera me-2"></i>
             Photos
         </a>
@@ -48,8 +48,14 @@
     </li>
     <li class="nav-item">
         <a class="nav-link" href="{{ url_for('profile.addpet') }}">
-            <i class="bi-plus-circle me-2"></i>
+            <i class="bi-clipboard2-plus me-2"></i>
             Add pet
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">
+            <i class="bi-clipboard2-minus me-2"></i>
+            Delete pet
         </a>
     </li>
 </ul>
