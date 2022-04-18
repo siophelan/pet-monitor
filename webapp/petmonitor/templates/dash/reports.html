@@ -72,7 +72,23 @@
         <div class="card bg-light">
             <div class="card-body">
                 <h5 class="card-title">Recent activity</h5>
-                <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+                <div id="myDiv"></div>
+                <!--<canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>-->
+                <script>
+                    /*
+                    var tmp = '{{ data_points | safe }}'
+                    var data = JSON.parse(tmp) 
+                    */
+                    var data = [
+                        {
+                            x : ['2022-04-16', '2022-04-17', '2022-04-18'],
+                            y : [4, 5, 3],
+                            type: 'bar'
+                        }
+                    ];
+
+                    Plotly.newPlot('myDiv', data);
+                </script>
             </div>
         </div>
     </div>
