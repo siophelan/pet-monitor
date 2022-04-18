@@ -148,3 +148,4 @@ lerna-debug.log*
 
 ### Project-specific files ###
 audio/
+captures/
