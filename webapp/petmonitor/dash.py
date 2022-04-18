@@ -85,10 +85,20 @@ def videos():
 def reports():
     # db = get_db()
     # pull in data based on SQL query for set date range
-    # range 1: today
-    # range 2: last 3 days
-    # range 3: this week
-    # range 4: this month
+    # range 1: today... sql = "SELECT * from activity WHERE activity_date IS date('now')"
+    # range 2: last 3 days... sql = "SELECT * from activity WHERE activity_date > date('now', '-3 day')"
+    # range 3: this week... sql = "SELECT * from activity WHERE activity_date > date('now', '-7 day')"
+    # range 4: this month... sql = "SELECT * from activity WHERE activity_date > date('now', '-1 month')"
+
+    sql = "SELECT * from activity WHERE activity_date > date('now', '-3 day')"
+    db = get_db()
+    raw_data = db.execute(sql).fetchall()
+
+    print([dict(row)['activity_date'] for row in raw_data])
+
+    #data_points = 
+    # [{ x : ['2022-04-17', '2022-04-18'], y : [4, 1], type: 'bar' }];
+
 
     return render_template('dash/reports.html')
 
