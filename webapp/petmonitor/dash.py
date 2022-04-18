@@ -1,3 +1,5 @@
+import os
+
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
@@ -22,6 +24,12 @@ def dash():
     now = datetime.now()
     today_string = now.strftime("%A, %d %B %Y")
     curr_year = int(now.strftime("%Y"))
+
+    # select a random captured image from database
+    sql = "SELECT img_timestamp from photo ORDER BY RANDOM() LIMIT 1"
+    db = get_db()
+    random_image = "img_" + dict(db.execute(sql).fetchone())['img_timestamp'] + ".jpg"
+    image = url_for('static', filename=f'captures/images/{random_image}')
     
     loggedin = session.get('loggedin')
     if loggedin is None:
@@ -36,7 +44,8 @@ def dash():
         'date' : today_string,
         'yearNotAge' : curr_year,
         'displayname' : displayname,
-        'pets' : pet_list
+        'pets' : pet_list,
+        'image' : image
     }
 
     return render_template('dash.html', **view_variables)
