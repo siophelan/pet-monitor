@@ -56,7 +56,7 @@ def dash():
 @login_required
 def photos():
     # db = get_db()
-    # pull in stored images based on SQL query for set date range
+    # return and serve image filepath from static directory based on SQL query for set date range
     # range 1: today
     # range 2: last 3 days
     # range 3: this week
