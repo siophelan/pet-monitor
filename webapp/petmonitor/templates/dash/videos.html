@@ -65,4 +65,37 @@
 <h1 class="h2">Videos</h1>
 {% endblock %}
 
-{% block content %}{% endblock %}
+{% block content %}
+<div class="album py-5 bg-light">
+    <div class="container">
+
+        <!-- Container for image preview cards which will fill space -->
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+            <!-- Video preview card -->
+            <div class="col">
+                <div class="card shadow-sm">
+
+                    <video autoplay="autoplay" controls="controls" preload="preload">
+                        <!-- insert video source here -->
+                    </video>
+
+                    <div class="card-body">
+                        <p class="card-text">Video date, time and tags (if any).</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                            </div>
+                            <small class="text-muted">#lambda</small>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}
