@@ -6,7 +6,6 @@ from datetime import datetime
 
 # function to connect to a database file
 def connect_to_DB(db_file):
-    # parameter: filepath to database
 
     # create and return connection
     conn = None
@@ -21,7 +20,6 @@ def connect_to_DB(db_file):
 
 # function to add a new record
 def add_record(conn, data):
-    # parameters: connection, data to be passed to SQL query
 
     # syntax for SQL query
     sql = '''INSERT INTO activity(date, time, last_activity) VALUES(?,?,?)'''
@@ -40,7 +38,6 @@ def add_record(conn, data):
 
 # function to retrieve the date and time of last activity
 def get_last_activity(conn):
-    # parameter: connection
 
     # create a cursor object
     cur = conn.cursor()
@@ -59,7 +56,6 @@ def get_last_activity(conn):
 
 # function to add a new activity
 def add_activity(conn):
-    # parameter: connection
     
     # get values from system clock
     date_now = datetime.now().strftime("%y-%m-%d")
