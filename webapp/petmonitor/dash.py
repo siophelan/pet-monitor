@@ -25,7 +25,7 @@ def dash():
     today_string = now.strftime("%A, %d %B %Y")
     curr_year = int(now.strftime("%Y"))
 
-    # select a random captured image from database
+    # select a random image from capture log in database
     sql = "SELECT img_timestamp from photo ORDER BY RANDOM() LIMIT 1"
     db = get_db()
     random_image = "img_" + dict(db.execute(sql).fetchone())['img_timestamp'] + ".jpg"
