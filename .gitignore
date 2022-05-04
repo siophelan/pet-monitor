@@ -1,8 +1,6 @@
 #------ gitignore ------#
 
-# Created by https://www.toptal.com/developers/gitignore/api/flask,visualstudiocode,python
-
-#-----------------------#
+# Created via https://www.toptal.com/developers/gitignore/api/flask,visualstudiocode,python
 
 ### Flask ###
 instance/*
@@ -146,8 +144,10 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
-### Project-specific files ###
+#-----------------------#
+
+### Project-specific files and directories ###
+sionotes.txt
 audio/
 captures/
 *.sqlite
-sionotes.txt
