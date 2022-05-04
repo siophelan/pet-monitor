@@ -4,6 +4,7 @@ import sqlite3
 from sqlite3 import Error
 from datetime import datetime
 
+# function to connect to a database file
 def connect_to_DB(db_file):
     # parameter: filepath to database
 
@@ -18,6 +19,7 @@ def connect_to_DB(db_file):
     
     return conn
 
+# function to add a new record
 def add_record(conn, data):
     # parameters: connection, data to be passed to SQL query
 
@@ -36,6 +38,7 @@ def add_record(conn, data):
     # return the ID of the newly-created record
     return cur.lastrowid
 
+# function to retrieve the date and time of last activity
 def get_last_activity(conn):
     # parameter: connection
 
@@ -54,6 +57,7 @@ def get_last_activity(conn):
     # return timestamp
     return prev_timestamp
 
+# function to add a new activity
 def add_activity(conn):
     # parameter: connection
     
@@ -65,6 +69,7 @@ def add_activity(conn):
     last_log = get_last_activity(conn)
     
     return date_now, time_now, last_log
+
 
 def main():
     database = r"/home/sio/catcam/testdatabase.db"
