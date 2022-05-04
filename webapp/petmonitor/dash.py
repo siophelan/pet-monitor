@@ -55,28 +55,24 @@ def dash():
 @dash_bp.route('/photos', methods=('GET', 'POST'))
 @login_required
 def photos():
-    # db = get_db()
-    # return and serve image filepath from static directory based on SQL query for set date range
-    # range 1: today
-    # range 2: last 3 days
-    # range 3: this week
-    # range 4: this month
 
-    return render_template('dash/photos.html')
+    filetype = "img"
+    date_range = "month"    # hardcoded for testing purposes only, should read from user input
+    img_list = get_filenames(filetype, date_range)  
+    
+    return render_template('dash/photos.html', img_list=img_list)
 
 
 # view 3: videos
 @dash_bp.route('/videos', methods=('GET', 'POST'))
 @login_required
 def videos():
-    # db = get_db()
-    # pull in stored images based on SQL query for set date range
-    # range 1: today
-    # range 2: last 3 days
-    # range 3: this week
-    # range 4: this month
+    
+    filetype = "vid"
+    date_range = "month"    # hardcoded for testing purposes only, should read from user input
+    vid_list = get_filenames(filetype, date_range)
 
-    return render_template('dash/videos.html')
+    return render_template('dash/videos.html', vid_list=vid_list)
 
 
 # view 4: reports
@@ -120,3 +116,34 @@ def get_pets(id):
 
     return pets
 
+
+# function to retrieve a list of filenames
+def get_filenames(filetype, date_range):
+
+    # use filetype to determine table to query
+    if (filetype=="img"):
+        db_table = "photo"
+    elif (filetype=="vid"):
+        db_table = "video"
+
+    # use date_range to create SQL statement
+    if (date_range=="today"):
+        sql = f"SELECT {filetype}_timestamp from {db_table} WHERE {filetype}_date IS date('now')"
+    elif (date_range=="threeday"):
+        sql = f"SELECT {filetype}_timestamp from {db_table} WHERE {filetype}_date > date('now', '-3 day')"
+    elif (date_range=="week"):
+        sql = f"SELECT {filetype}_timestamp from {db_table} WHERE {filetype}_date > date('now', '-7 day')"
+    elif (date_range=="month"):
+        sql = f"SELECT {filetype}_timestamp from {db_table} WHERE {filetype}_date > date('now', '-1 month')"
+    else:
+        # default date range is today
+        sql = f"SELECT {filetype}_timestamp from {db_table} WHERE {filetype}_date IS date('now')"
+
+    raw_data = get_db().execute(sql).fetchall()
+    # print([dict(row)['img_timestamp'] for row in raw_data])   # testing only
+    timestamp_list = [dict(row)[f'{filetype}_timestamp'] for row in raw_data]
+
+    if timestamp_list is None:
+        return None
+    
+    return timestamp_list
