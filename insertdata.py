@@ -22,7 +22,7 @@ def connect_to_DB(db_file):
 def add_record(conn, data):
 
     # syntax for SQL query
-    sql = '''INSERT INTO activity(date, time, last_activity) VALUES(?,?,?)'''
+    sql = '''INSERT INTO activity(activity_date, activity_time, last_activity) VALUES(?,?,?)'''
 
     #create a cursor object
     cur = conn.cursor()
@@ -43,12 +43,12 @@ def get_last_activity(conn):
     cur = conn.cursor()
 
     # execute the SQL query
-    cur.execute("SELECT date, time FROM activity ORDER BY id DESC")
+    cur.execute("SELECT activity_date, activity_time FROM activity ORDER BY id DESC")
 
     # get the values from the most recent record only
     prev_date, prev_time = cur.fetchone()
 
-    # save timestamp as string
+    # concatenate timestamp and save as string
     prev_timestamp = prev_date + " " + prev_time
 
     # return timestamp
@@ -58,7 +58,7 @@ def get_last_activity(conn):
 def add_activity(conn):
     
     # get values from system clock
-    date_now = datetime.now().strftime("%y-%m-%d")
+    date_now = datetime.now().strftime("%Y-%m-%d")
     time_now = datetime.now().strftime("%H:%M:%S")
     
     # get value from database
@@ -68,7 +68,8 @@ def add_activity(conn):
 
 
 def main():
-    database = r"/home/sio/catcam/testdatabase.db"
+
+    database = r"webapp\instance\petmonitor.sqlite"
 
     # create database connection
     conn = connect_to_DB(database)
