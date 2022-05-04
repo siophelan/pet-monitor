@@ -149,3 +149,5 @@ lerna-debug.log*
 ### Project-specific files ###
 audio/
 captures/
+*.sqlite
+sionotes.txt
