@@ -16,10 +16,10 @@ camera.rotation = 270                   # adjust as required for camera position
 
 # runtime setup
 interval = timedelta(seconds=30)        # minimum time between captures
-program_duration = timedelta(minutes=2) # time that program should run for
+program_duration = timedelta(minutes=2) # duration that program should run for
 
-# filename timestamp
-save_time = ""                          # updates dynamically for filenames
+# filename timestamp, updates dynamically
+save_time = ""
 
 # function to capture still image
 def take_photo():
@@ -54,7 +54,7 @@ def main():
     print(str(start_time))
     print("CTRL+C to end\n")
 
-    sleep(5) # slight delay allows tester to change position
+    sleep(5) # delay before sensor begins to monitor
 
     # outer loop executes once only
     while True:
@@ -107,7 +107,7 @@ def main():
                 print("Program ended at " + datetime.now().strftime("%H:%M:%S"))
                 return
 
-# code to execute
+# program code to execute
 if __name__ == "__main__":
     try:
         main()
