@@ -5,6 +5,7 @@ from flask import current_app, g
 from flask.cli import with_appcontext
 
 
+# function to connect to a database file
 def get_db():
     # g points to the Flask application handling the request
     if 'db' not in g:
@@ -19,6 +20,7 @@ def get_db():
     return g.db
 
 
+# function to close the database connection
 def close_db(e=None):
     # check whether g.db was set (i.e. if connection was created)
     db = g.pop('db', None)
@@ -28,6 +30,7 @@ def close_db(e=None):
         db.close()
 
 
+# function to initialise the database
 def init_db():
     # return the database connection
     db = get_db()
