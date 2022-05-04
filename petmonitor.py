@@ -35,7 +35,7 @@ def take_photo():
     global save_time
     save_time = datetime.now().strftime("%y%m%d_%H%M%S")
     #camera.capture("/home/sio/myssd/petmonitor/images/img_{timestamp}.jpg".format(timestamp=save_time))
-    camera.capture(f'webapp/petmonitor/static/captures/images/img_{save_time}.jpg')
+    camera.capture("webapp/petmonitor/static/captures/images/img_{timestamp}.jpg".format(timestamp=save_time))
     print("Photo taken!")
 
 # function to capture 10-second video
@@ -44,7 +44,7 @@ def record_video():
     save_time = datetime.now().strftime("%y%m%d_%H%M%S")
     #camera.start_recording("/home/sio/myssd/petmonitor/videos/vid_{timestamp}.h264".format(timestamp=save_time))
     #camera.start_recording(r"webapp\petmonitor\static\captures\videos\vid_{timestamp}.h264".format(timestamp=save_time))
-    camera.start_recording(f'webapp/petmonitor/static/captures/videos/vid_{save_time}.h264')
+    camera.start_recording("webapp/petmonitor/static/captures/videos/vid_{timestamp}.h264".format(timestamp=save_time))
     sleep(10)   # record for 10 seconds
     camera.stop_recording()
     print("Video recorded!")
