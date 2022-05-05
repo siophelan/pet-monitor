@@ -26,7 +26,7 @@ program_duration = timedelta(minutes=2) # duration that program should run for
 save_time = ""
 
 # database filepath
-database = r"webapp\instance\petmonitor.sqlite"
+database = r"webapp\instance\petmonitor.sqlite" # possible syntax error
 
 # ----- FUNCTIONS --------------------------------------------------------- #
 
@@ -36,6 +36,12 @@ def take_photo():
     save_time = datetime.now().strftime("%y%m%d_%H%M%S")
     #camera.capture("/home/sio/myssd/petmonitor/images/img_{timestamp}.jpg".format(timestamp=save_time))
     camera.capture(f'webapp/petmonitor/static/captures/images/img_{save_time}.jpg')
+    conn = connect_to_DB(database)
+    with conn:
+        # log in database
+        today = datetime.now().strftime("%Y-%m-%d")
+        values = (today, save_time)
+        create_photo_record(conn, values)
     print("Photo taken!")
 
 # function to capture 10-second video
@@ -43,27 +49,25 @@ def record_video():
     global save_time
     save_time = datetime.now().strftime("%y%m%d_%H%M%S")
     #camera.start_recording("/home/sio/myssd/petmonitor/videos/vid_{timestamp}.h264".format(timestamp=save_time))
-    #camera.start_recording(r"webapp\petmonitor\static\captures\videos\vid_{timestamp}.h264".format(timestamp=save_time))
     camera.start_recording(f'webapp/petmonitor/static/captures/videos/vid_{save_time}.h264')
+    conn = connect_to_DB(database)
+    with conn:
+        # log in database
+        today = datetime.now().strftime("%Y-%m-%d")
+        values = (today, save_time)
+        create_video_record(conn, values)
     sleep(10)   # record for 10 seconds
     camera.stop_recording()
     print("Video recorded!")
 
-# placeholder function to log the activity
-def update_log():
-    log = open("/home/sio/myssd/petmonitor/log.txt", "a")
-    log_time = datetime.now().strftime("%H:%M:%S, %d-%m-%y")
-    log.write("Activity logged at {timestamp}.\n".format(timestamp=log_time))
-    log.close()
-    print("Log updated!")
-
+# function to log the activity
 def log_activity():
     conn = connect_to_DB(database)
     with conn:
         # values for new activity
         curr_date, curr_time, prev_log = get_activity_data(conn)
         new_activity = (curr_date, curr_time, prev_log)
-        activity_id = create_record(conn, new_activity)
+        activity_id = create_activity_record(conn, new_activity)
         print("New activity added to database: record #", activity_id)
 
 # function to connect to a database file
@@ -80,19 +84,47 @@ def connect_to_DB(db_file):
     
     return conn
 
-# function to create a new record
-def create_record(conn, data):
+# functions to create a new record
+def create_activity_record(conn, data):
 
-    # syntax for SQL query
+    # create SQL statement
     sql = '''INSERT INTO activity(activity_date, activity_time, last_activity) VALUES(?,?,?)'''
 
-    #create a cursor object
+    # create a cursor object
     cur = conn.cursor()
 
-    # execute the SQL query
+    # execute the SQL query and commit changes
     cur.execute(sql, data)
+    conn.commit()
 
-    # commit the changes
+    # return the ID of the newly-created record
+    return cur.lastrowid
+
+def create_photo_record(conn, data):
+
+    # create SQL statement
+    sql = '''INSERT INTO photo(img_date, img_timestamp) VALUES(?,?)'''
+
+    # create a cursor object
+    cur = conn.cursor()
+
+    # execute the SQL query and commit changes
+    cur.execute(sql, data)
+    conn.commit()
+
+    # return the ID of the newly-created record
+    return cur.lastrowid
+
+def create_video_record(conn, data):
+
+    # create SQL statement
+    sql = '''INSERT INTO video(vid_date, vid_timestamp) VALUES(?,?)'''
+
+    # create a cursor object
+    cur = conn.cursor()
+
+    # execute the SQL query and commit changes
+    cur.execute(sql, data)
     conn.commit()
 
     # return the ID of the newly-created record
@@ -107,11 +139,13 @@ def get_last_activity(conn):
     # execute the SQL query
     cur.execute("SELECT activity_date, activity_time FROM activity ORDER BY id DESC")
 
-    # get the values from the most recent record only
-    prev_date, prev_time = cur.fetchone()
+    # fetch the most recent record only
+    result = cur.fetchone()
 
-    # concatenate timestamp and save as string
-    prev_timestamp = prev_date + " " + prev_time
+    if result:
+        prev_timestamp = result[0] + " " + result[1]    # save date and time as string
+    else:
+        prev_timestamp = ""
 
     # return timestamp
     return prev_timestamp
@@ -157,8 +191,11 @@ def main():
         sleep(2)    
 
         # record activity
+        print("Taking photo..")
         take_photo()
-        update_log()
+        print("Writing to DB..")
+        log_activity()
+        print("Starting video recording..")
         record_video()
         
         # inner loop executed for remainder of program
@@ -175,8 +212,11 @@ def main():
             if (new_point_in_time - point_in_time) >= interval:
 
                 # log new activity
+                print("Taking photo..")
                 take_photo()
-                update_log()
+                print("Writing to DB..")
+                log_activity()
+                print("Starting video recording..")
                 record_video()
 
                 # reset original point_in_time to latest recorded activity
@@ -203,9 +243,9 @@ if __name__ == "__main__":
         print("User exited program!")
         camera.close()
 
-    except Exception:
+    except Exception as e:
         # for all other errors
-        print("An error or exception occurred!")
+        print("An error or exception occurred: " + str(e))
         camera.close()
 
     finally:
