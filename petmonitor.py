@@ -48,7 +48,7 @@ def take_photo():
 def record_video():
     global save_time
     save_time = datetime.now().strftime("%y%m%d_%H%M%S")
-    #camera.start_recording("/home/sio/myssd/petmonitor/videos/vid_{timestamp}.h264".format(timestamp=save_time))
+    #camera.start_recording("/home/sio/myssd/petmonitor/videos/vid_{timestamp}.h264".format(timestamp=save_time)) #revisit
     camera.start_recording(f'webapp/petmonitor/static/captures/videos/vid_{save_time}.h264')
     conn = connect_to_DB(database)
     with conn:
