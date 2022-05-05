@@ -53,7 +53,7 @@ def register():
 
             except db.IntegrityError:
                 # show error if email address already exists in database
-                error = f"User {email} is already registered!"
+                error = "User {email} is already registered!".format(email=email)
             else:
                 # redirect user to login view
                 return redirect(url_for('auth.login'))

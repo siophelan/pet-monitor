@@ -238,7 +238,7 @@ def get_profile(id):
     ).fetchone()
 
     if profile is None:
-        abort(404, f"Profile for user {id} does not exist") 
+        abort(404, "Profile for user {id} does not exist".format(id=id)) 
     
     if profile['id'] != g.user['id']:
         abort(403)

@@ -29,7 +29,7 @@ def dash():
     sql = "SELECT img_timestamp from photo ORDER BY RANDOM() LIMIT 1"
     db = get_db()
     random_image = "img_" + dict(db.execute(sql).fetchone())['img_timestamp'] + ".jpg"
-    image = url_for('static', filename=f'captures/images/{random_image}')
+    image = url_for('static', filename="captures/images/{random_image}".format(random_image=random_image))
     
     loggedin = session.get('loggedin')
     if loggedin is None:
@@ -126,22 +126,24 @@ def get_filenames(filetype, date_range):
     elif (filetype=="vid"):
         db_table = "video"
 
-    # use date_range to create SQL statement
+    # use date_range to customise SQL statement
     if (date_range=="today"):
-        sql = f"SELECT {filetype}_timestamp from {db_table} WHERE {filetype}_date IS date('now')"
+        search_range = "IS date('now')"
     elif (date_range=="threeday"):
-        sql = f"SELECT {filetype}_timestamp from {db_table} WHERE {filetype}_date > date('now', '-3 day')"
+        search_range = "> date('now', '-3 day')"
     elif (date_range=="week"):
-        sql = f"SELECT {filetype}_timestamp from {db_table} WHERE {filetype}_date > date('now', '-7 day')"
+        search_range = "> date('now', '-7 day')"
     elif (date_range=="month"):
-        sql = f"SELECT {filetype}_timestamp from {db_table} WHERE {filetype}_date > date('now', '-1 month')"
+        search_range = "> date('now', '-1 month')"
     else:
         # default date range is today
-        sql = f"SELECT {filetype}_timestamp from {db_table} WHERE {filetype}_date IS date('now')"
+        search_range = "IS date('now')"
+        
+    sql = "SELECT {filetype}_timestamp from {db_table} WHERE {filetype}_date {search_range}".format(filetype=filetype, db_table=db_table, search_range=search_range)
 
     raw_data = get_db().execute(sql).fetchall()
     # print([dict(row)['img_timestamp'] for row in raw_data])   # testing only
-    timestamp_list = [dict(row)[f'{filetype}_timestamp'] for row in raw_data]
+    timestamp_list = [dict(row)['{filetype}_timestamp'.format(filetype=filetype)] for row in raw_data]
 
     if timestamp_list is None:
         return None
